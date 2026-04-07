@@ -1,0 +1,196 @@
+﻿@model CRUD_Application.Models.Board
+@{
+	Layout = "_Layout";
+}
+<hr />
+
+@if (Model == null)
+{
+	<h2>Please select a board from the sidebar.</h2>
+}
+else
+{
+	ViewData["Title"] = Model.Name;
+	ViewData["BoardName"] = Model.Name;
+	ViewData["BoardDesc"] = Model.Desc;
+
+	<div class="lists-row">
+
+		@foreach (var list in Model.Lists)
+		{
+			// define the hex value for the background
+			string bgColour = list.Colour.ToLower() switch
+			{
+				"red" => "#451b12",
+				"green" => "#103821",
+				"blue" => "#0d365c",
+				"orange" => "#a1620b",
+				"purple" => "#4d2d47",
+				"teal" => "#1d524b",
+				"brown" => "#3d332a",
+				"yellow" => "#edd83b"
+			};
+
+			<div class="list-column" style="background-color: @bgColour;">
+				<span class="list-name">@list.Name</span>
+				<ul id="@list.Id">
+					@foreach (var task in list.Tasks)
+					{
+						@* display tasks in the list *@
+						<li style="list-style: none; position: relative;" id="@list.Id">
+
+							<label class="container @(task.Completed == 1 ? "completed-task" : "task")" id="label_@task.Id">
+								@task.Content
+								<input type="checkbox"
+									data-task-id="@task.Id"
+									onchange="toggleCheckbox(this)"
+									class="task-checkbox"
+									@(task.Completed == 1 ? "checked" : "")> @* checks in database if task has been completed *@
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" onclick="EditTask(this)" id="@task.Id">✎</span>
+								<span class="delete" onclick="DeleteTask(this)" id="@task.Id">✖</span>
+							</div>
+						</li>
+					}
+
+					@* new task button *@
+					<li style="list-style: none">
+						<label class="container"></label>
+						<button class="newTask" onclick="NewTask(this)">+</button>
+
+					</li>
+				</ul>
+			</div>
+		}
+	</div>
+}
+
+@section Scripts {
+	<script>
+
+		function toggleCheckbox(element) {
+			const taskId = element.getAttribute('data-task-id');
+			const label = document.getElementById('label_' + taskId);
+			const isChecked = element.checked;
+
+			if (label) {
+				if (element.checked) {
+					label.classList.add('completed-task');
+					label.classList.remove('task');
+				} else {
+					label.classList.remove('completed-task');
+					label.classList.add('task');
+				}
+			}
+
+			// call the controller to update the "completed" value in the database
+			fetch('/Tasks/UpdateCompletedValue', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					id: parseInt(taskId),
+					completed: isChecked ? 1 : 0
+				})
+			})
+		}
+
+		function NewTask(buttonElement) {
+			const list = buttonElement.closest('ul'); // retrieve list element
+			const li = document.createElement('li'); // create new list item
+			li.style.listStyle = "none";
+			li.style.marginTop = "-20px";
+
+			const input = document.createElement("input");
+			input.type = "text";
+			input.className = "task-edit-input";
+			input.placeholder = "Enter new task";
+
+			const plus = document.createElement("span");
+			plus.className = "plus";
+			plus.textContent = "+";
+			plus.id = "plus";
+			
+
+			const listId = list.id; // retrieve the list's id in the database
+			const taskPos = list.getElementsByTagName("li").length; // retrieve the position value of the new task
+			const now = new Date().toISOString().substring(0,10); // retrieve the current date
+
+
+			// helper function for saving the task to the database
+			const saveTask = () => {
+				const taskContent = input.value;
+
+				if (taskContent.trim() === "") return; // ensure empty tasks aren't saved
+
+				// call the controller to save the new task in the database
+				fetch('/Tasks/CreateTask', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						Content: taskContent,
+						ListId: parseInt(listId),
+						Position: taskPos,
+						CreatedAt: now,
+						UpdatedAt: now
+					})
+				})
+				.then(response => {
+					if (response.ok) {
+						// reload the page to properly display the new task
+						location.reload();
+					}
+				});
+			}
+
+			// listener to save the new task when the user presses enter
+			input.addEventListener("keypress", function(event) {
+				if (event.key === "Enter") {
+					saveTask();
+				}
+			});
+
+			// listener to save the new task when the user clicks the plus
+			plus.addEventListener("click", function() {
+				saveTask();
+			});
+
+
+			// display the text box and plus sign
+			li.appendChild(plus);
+			li.appendChild(input);
+			list.insertBefore(li, buttonElement.parentElement); // inserts text box before the new task button
+
+			buttonElement.style.display = "none"; // hides the new task button
+
+			input.focus(); // focuses on the text box
+		}
+
+
+		function DeleteTask(buttonElement) {
+			const taskId = buttonElement.id; // retrieve task's id in the database
+
+			// call the controller to delete the task from the database
+			fetch(`/Tasks/DeleteTask`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					TaskId: parseInt(taskId)
+				})
+			})
+			.then(response => {
+				if (response.ok) {
+					// remove the <li> element
+					buttonElement.closest('li').remove();
+				} else {
+					alert("Could not delete task.");
+				}
+			});
+		}
+
+	</script>
+}

@@ -1,0 +1,327 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    margin-top: 60px;
+    background-color: #1f1e1f;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+    background-color: #1c1b1c;
+    color: white;
+    position: fixed;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 10000;
+}
+
+.headerBar {
+    border-bottom: 5px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 90px;
+}
+
+.headerTitle {
+    font-size: 26px;
+}
+.headerDesc {
+    font-size: 21px;
+    padding-left: 20px;
+    padding-top: 2px;
+    color: #eaeaea;
+}
+
+.sidebar {
+    width: 200px;
+    position: fixed;
+    text-align: left;
+    left: 0px;
+    top: 0px;
+    z-index: 999;
+    height: 100vh;
+    opacity: 1;
+    background-color: #1c1b1c;
+    color: white;
+    box-shadow: 15px 0 12px rgba(0, 0, 0, 0.085);
+    transition: left 0.3s ease-out;
+    margin: 0px;
+}
+.sidebarHidden {
+    left: -220px;
+    transition: left 0.3s ease-out;
+}
+
+.sidebarTitle {
+    font-size: 24px;
+    padding-left: 20px;
+}
+
+.sidebarButton {
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 45px;
+    padding-left: 40px;
+    margin-left: 0px;
+    box-sizing: border-box;
+    font-size: 20px;
+    transition: font-size 0.02s ease-in-out;
+    border-radius: 5px;
+}
+.sidebarButton:hover {
+    color: white;
+    text-decoration: none;
+    transition: font-size 0.05s ease-in-out;
+    background-color: #232324;
+}
+
+.closeSidebar {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 30px;
+    transition: 0.5s;
+    cursor: pointer;
+    font-family: 'Times New Roman', Times, serif;
+}
+.closeSidebar:hover {
+    transition: 0.2s;
+    text-shadow: 0px 0px 12px rgb(255, 255, 255, 0.54);
+}
+
+.mobileNavToggle {
+    position: absolute;
+    top: 5px;
+    left: 25px;
+    z-index: 100;
+    background-color: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-size: 32px;
+    height: 40px;
+    width: 40px;
+    transition: 0.18s ease-in-out;
+    cursor: pointer;
+    text-shadow: none;
+}
+.mobileNavToggle:hover {
+    text-shadow: 0px 0px 12px rgb(255, 255, 255, 0.54);
+}
+
+
+
+/* ------ list */
+.lists-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 25px;
+    margin-left: 160px;
+    margin-right: 160px;
+    margin-top: 30px;
+}
+.list-column {
+    padding: 35px 30px;
+    min-width: 150px;
+    border-radius: 15px;
+    width: 250px;
+    height: auto;
+}
+
+.list-name {
+    font-weight: bold;
+    font-size: 24px;
+    margin-left: 8px;
+}
+
+
+/* ------ checkbox */
+.task {
+    transition: 0.4s;
+    
+}
+.completed-task {
+    text-decoration: line-through;
+    color: rgb(204, 204, 204, 0.9);
+    transition: 0.4s;
+}
+
+.container { /* container for the checkbox */
+    display: block;
+    position: relative;
+    left: -30px;
+    padding-left: 35px;
+    margin-bottom: 11px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index: 1;
+}
+
+.container input[type=checkbox] { /* hide the default checkbox */
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.checkmark { /* display custom checkbox */
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    border: 2px solid rgb(255, 255, 255, 0.8);
+    border-radius: 3px;
+}
+.container input:checked ~ .checkmark {
+    background-color: rgb(255, 255, 255, 0.3);
+}
+
+.checkmark:after { /* hide checkmark */
+    content: "";
+    position: absolute;
+    display: none;
+}
+.container input:checked ~ .checkmark:after { /* show checkmark */
+    display: block;
+}
+.container .checkmark:after { /* checkmark styling*/
+    left: 5px;
+    top: -1px;
+    width: 3px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.newTask {
+    font-size: 35px;
+    color: rgb(255, 255, 255, 0);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: 0.1s;
+    margin-top: -8px;
+    height: 5px;
+    position: absolute;
+}
+.newTask:hover {
+    color: rgb(255, 255, 255, 1) !important;
+}
+.list-column:hover .newTask {
+    color: rgb(255, 255, 255, 0.3);
+}
+
+.task-edit-input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+    color: white;
+    font-size: 16px;
+    width: 85%;
+    margin-bottom: 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.task-edit-input:focus {
+    outline: none;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.8);
+}
+.task-edit-input::placeholder {
+    color: rgb(255, 255, 255, 0.5);
+    font-style: italic;
+}
+.task-edit-input:focus::placeholder {
+    color: rgb(255, 255, 255, 0.2);
+}
+
+.plus {
+    font-size: 35px;
+    color: rgb(255, 255, 255, 0.6);
+    background-color: transparent;
+    border: none;
+    margin-left: -32px;
+    margin-right: 12px;
+    top: 5px;
+    position: relative;
+    transition: 0.1s;
+}
+.plus:hover {
+    color: rgb(255, 255, 255, 1);
+}
+
+
+.edit-delete-span {
+    position: absolute;
+    top: 0;
+    text-align: right;
+    right: -14px;
+    opacity: 0;
+    transition: 0.05s;
+}
+.container:hover + .edit-delete-span
+{
+    opacity: 1;
+}
+.edit-delete-span:hover {
+    opacity: 1;
+}
+
+.delete {
+    right: 1px;
+    color: rgb(255, 255, 255, 0.5);
+    width: 30px;
+    font-size: 18px;
+}
+.delete:hover {
+    color: rgb(255, 255, 255) !important;
+    opacity: 1 !important;
+}
+
+.edit {
+    padding-right: 1px;
+    color: rgb(255, 255, 255, 0.5);
+    width: 30px;
+    font-size: 18px;
+}
+.edit:hover {
+    color: rgb(255, 255, 255)!important;
+    opacity: 1 !important;
+}
+
+
+

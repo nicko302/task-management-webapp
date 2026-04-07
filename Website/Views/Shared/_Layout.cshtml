@@ -1,0 +1,86 @@
+﻿@inject CRUD_Application.Data.ApplicationDbContext _context
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CRUD_Application</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CRUD_Application.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+            <div class="headerBar">
+
+                <div class="headerTitle">@ViewData["BoardName"]</div>
+                <div class="headerDesc">•</div>
+            <div class="headerDesc">@ViewData["BoardDesc"]</div>
+                
+                @* ------- side bar *@
+                <div class=mobileNavbar>
+                    <button class="mobileNavToggle" onclick="toggleSidebar()">☰</button>
+
+                    <div class="sidebar sidebarHidden" id="sidebar">
+                        <button class="closeSidebar" onclick="toggleSidebar()">✖</button>
+                        <li class="sidebarTitle">
+                            <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
+                        </li>
+                        @*----- display all boards in the sidebar*@
+                        @foreach (var board in _context.Board.ToList())
+                        {
+                            <li>
+                                <a class="sidebarButton"
+                                    asp-controller="Boards"
+                                    asp-action="Index"
+                                    asp-route-id="@board.Id">
+                                    @board.Name
+                                </a>
+                            </li>
+                        }
+
+                        @*
+                        <li>
+                            <a class="sidebarButton" href=" bookings.php">
+                                Booking
+                            </a>
+                        </li>
+                        <li>
+                            <a class="sidebarButton" asp-area="" asp-controller="Categories" asp-action="Index">
+                                Category
+                            </a>
+                        </li>
+                        *@
+                        <li class="sidebarTitle">
+                            <br>
+                            <p style="margin-top: 16px; margin-bottom: 15px;">Shared boards</p>
+                        </li>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+
+    @* <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - CRUD_Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer> *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
