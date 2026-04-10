@@ -95,5 +95,33 @@ namespace CRUD_Application.Controllers
         {
             public int TaskId { get; set; }
         }
+
+
+        // function to edit an existing task in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Tasks/EditTask")]
+        public async Task<IActionResult> EditTask([FromBody] EditTaskDto data)
+        {
+            var existingTask = await _context.Task.FindAsync(data.TaskId);
+
+            if (existingTask == null)
+            {
+                return NotFound($"Task with ID {data.TaskId} not found.");
+            }
+
+            existingTask.Content = data.Content;
+            existingTask.UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString();
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        public class EditTaskDto
+        {
+            public int TaskId { get; set; }
+            public string Content { get; set; }
+            public string UpdatedAt { get; set; }
+        }
     }
 }

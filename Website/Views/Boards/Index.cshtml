@@ -192,5 +192,81 @@ else
 			});
 		}
 
+		function EditTask(buttonElement) {
+			const taskId = buttonElement.id; // retrieve task's id in the database
+
+			const textElement = document.getElementById('label_' + taskId);
+			const placeholderText = textElement.innerText; // retrieve the task's content
+
+			const li = textElement.closest('li'); // retrieve li element
+			li.style.top = "-5px";
+			li.style.height = "33px";
+
+			const span = document.createElement("span");
+			span.style.marginTop = "0px";
+
+			const edit = document.createElement("span");
+			edit.className = "edit-submit";
+			edit.textContent = "✎";
+			edit.id = "edit-submit";
+
+			const input = document.createElement("input");
+			input.type = "text";
+			input.className = "task-edit-input";
+			input.value = placeholderText;
+			input.style.transform = 'translateX(2px)';
+
+			const now = new Date().toISOString().substring(0,10); // retrieve the current date
+
+
+			// helper function for saving the task to the database
+			const saveTask = () => {
+				const taskContent = input.value;
+
+				if (taskContent.trim() === "") return; // ensure empty tasks aren't saved
+
+				// call the controller to save the new task in the database
+				fetch('/Tasks/EditTask', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						TaskId: parseInt(taskId),
+						Content: taskContent,
+						UpdatedAt: now
+					})
+				})
+				.then(response => {
+					if (response.ok) {
+						// reload the page to properly display the new task
+						location.reload();
+					}
+				});
+			}
+
+			// listener to save the new task when the user presses enter
+			input.addEventListener("keypress", function(event) {
+				if (event.key === "Enter") {
+					saveTask();
+				}
+			});
+
+			// listener to save the new task when the user clicks the plus
+			edit.addEventListener("click", function() {
+				saveTask();
+			});
+
+
+			// assemble and display the text box and submit button
+			span.appendChild(edit);
+			span.appendChild(input);
+			textElement.replaceWith(span);
+
+			// hide the edit/delete buttons
+			const actionButtons = li.querySelector('.edit-delete-span');
+			if (actionButtons) actionButtons.style.display = 'none';
+
+			input.focus();
+		}
+
 	</script>
 }

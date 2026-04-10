@@ -285,6 +285,22 @@ header {
 }
 
 
+.edit-submit {
+    font-size: 21px;
+    color: rgb(255, 255, 255, 0.6);
+    background-color: transparent;
+    border: none;
+    margin-left: -32px;
+    margin-right: 12px;
+    top: 2px;
+    position: relative;
+    transition: 0.1s;
+}
+.edit-submit:hover {
+    color: rgb(255, 255, 255, 1);
+}
+
+
 .edit-delete-span {
     position: absolute;
     top: 0;
