@@ -14,7 +14,7 @@ else
 	ViewData["BoardName"] = Model.Name;
 	ViewData["BoardDesc"] = Model.Desc;
 
-	<div class="lists-row">
+	<div class="lists-row" data-board-id="@Model.Id">
 
 		@foreach (var list in Model.Lists)
 		{
@@ -65,6 +65,9 @@ else
 				</ul>
 			</div>
 		}
+
+		<span class="new-list" onclick="NewList(this)" data-board-id="@Model.Id.">+</span>
+
 	</div>
 }
 
@@ -266,6 +269,84 @@ else
 			if (actionButtons) actionButtons.style.display = 'none';
 
 			input.focus();
+		}
+
+
+		function NewList(buttonElement) {
+			const listsRow = buttonElement.parentElement; // retrieve lists-row element
+			const boardId = listsRow.dataset.boardId; // retrieve the current board's ID in the database
+			const listPos = document.querySelectorAll('.list-column').length + 1; // retrieve the position value of the new list
+			const now = new Date().toISOString().substring(0,10); // retrieve the current date
+
+
+			// create the new dummy list for name entry
+			//<div class="list-column" style="background-color: bgColour;">
+				//<span class="list-name">list.Name</span>
+
+			const newListDiv = document.createElement('div'); // create new div
+			newListDiv.className = "list-column";
+			newListDiv.style.backgroundColor = "#103821";
+			newListDiv.style.paddingTop = "20px";
+
+			const input = document.createElement("input");
+			input.type = "text";
+			input.className = "list-name-edit-input";
+			input.placeholder = "Enter list name";
+
+			const plus = document.createElement("span");
+			plus.className = "plus";
+			plus.textContent = "+";
+			plus.id = "plus";
+			plus.style.left = "40px";
+			plus.style.position = "relative";
+
+			// helper function for saving the list to the database
+			const saveList = () => {
+				const listName = input.value;
+
+				if (listName.trim() === "") return; // ensure empty tasks aren't saved
+
+				// call the controller to save the new task in the database
+				fetch('/Lists/CreateList', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						Name: listName,
+						BoardId: parseInt(boardId),
+						Position: listPos,
+						CreatedAt: now,
+						UpdatedAt: now,
+						Colour: "Green"
+					})
+				})
+				.then(response => {
+					if (response.ok) {
+						// reload the page to properly display the new task
+						location.reload();
+					}
+				});
+			}
+
+
+			// listener to save the new list when the user presses enter
+			input.addEventListener("keypress", function(event) {
+				if (event.key === "Enter") {
+					saveList();
+				}
+			});
+			// listener to save the new list when the user clicks the plus
+			plus.addEventListener("click", function() {
+				saveList();
+			});
+
+
+			// display the text box and plus sign
+			newListDiv.appendChild(input);
+			newListDiv.appendChild(plus);
+			listsRow.insertBefore(newListDiv, buttonElement); // adds new list to page
+
+			input.focus(); // focuses on the text box
+
 		}
 
 	</script>

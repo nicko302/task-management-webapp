@@ -339,5 +339,34 @@ header {
     opacity: 1 !important;
 }
 
+.new-list {
+    display: flex;
+    align-items: center;
+    height: auto;
+    align-self: stretch;
+    font-size: 35px;
+    opacity: 0;
+}
+.new-list:hover {
+    color: rgb(255, 255, 255) !important;
+    opacity: 1 !important;
+}
 
+.lists-row:hover .new-list {
+    opacity: 0.5;
+}
 
+.list-name-edit-input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+    color: white;
+    font-size: 22px;
+    width: 85%;
+    margin-bottom: 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.list-name-edit-input:focus {
+    border-color: transparent;
+}
