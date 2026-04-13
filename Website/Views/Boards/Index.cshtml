@@ -32,7 +32,9 @@ else
 			};
 
 			<div class="list-column" style="background-color: @bgColour;">
-				<span class="list-name">@list.Name</span>
+				<span class="list-name" id="label_@list.Id">@list.Name</span>
+				<span class="edit-list" onclick="EditList(this)" id="@list.Id">✎</span>
+
 				<ul id="@list.Id">
 					@foreach (var task in list.Tasks)
 					{
@@ -346,7 +348,82 @@ else
 			listsRow.insertBefore(newListDiv, buttonElement); // adds new list to page
 
 			input.focus(); // focuses on the text box
+		}
 
+		function EditList(buttonElement) {
+			const listId = buttonElement.id; // retrieve task's id in the database
+
+			const textElement = buttonElement.previousElementSibling;
+			const placeholderText = textElement.innerText; // retrieve the task's content
+
+			// creating the elements
+			const span = document.createElement("span");
+			span.style.marginTop = "0px";
+			span.style.display = "block";
+			span.style.height = "0px";
+			span.style.overflow = "visible";
+			span.style.marginBottom = "5px";
+
+			const edit = document.createElement("span");
+			edit.className = "edit-submit";
+			edit.textContent = "✎";
+			edit.id = "edit-submit";
+			edit.style.left = "40px";
+			edit.style.fontSize = "25px";
+
+			const input = document.createElement("input");
+			input.type = "text";
+			input.className = "list-edit-input";
+			input.value = placeholderText;
+			input.style.transform = 'translateX(2px)';
+			input.maxLength = "14";
+
+			const now = new Date().toISOString().substring(0,10); // retrieve the current date
+
+
+			// helper function for saving the task to the database
+			const saveList = () => {
+				const listContent = input.value;
+
+				if (listContent.trim() === "") return; // ensure empty list names aren't saved
+
+				// call the controller to save the new list in the database
+				fetch('/Lists/EditList', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						ListId: parseInt(listId),
+						NewName: listContent,
+						UpdatedAt: now
+					})
+				})
+				.then(response => {
+					if (response.ok) {
+						// reload the page to properly display the new list
+						location.reload();
+					}
+				});
+			}
+
+			// listener to save the new list when the user presses enter
+			input.addEventListener("keypress", function(event) {
+				if (event.key === "Enter") {
+					saveList();
+				}
+			});
+
+			// listener to save the new task when the user clicks the plus
+			edit.addEventListener("click", function() {
+				saveList();
+			});
+
+
+			// assemble and display the text box and submit button
+			span.appendChild(input);
+			span.appendChild(edit);
+			textElement.replaceWith(span);
+
+			input.focus();
 		}
 
 	</script>

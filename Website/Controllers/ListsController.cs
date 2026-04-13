@@ -51,5 +51,33 @@ namespace CRUD_Application.Controllers
             public string Colour { get; set; }
         }
 
+
+        // function to edit an existing list in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Lists/EditList")]
+        public async Task<IActionResult> EditList([FromBody] EditListDto data)
+        {
+            var existingList = await _context.List.FindAsync(data.ListId);
+
+            if (existingList == null)
+            {
+                return NotFound($"List with ID {data.ListId} not found.");
+            }
+
+            existingList.Name = data.NewName;
+            existingList.UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString();
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        public class EditListDto
+        {
+            public int ListId { get; set; }
+            public string NewName { get; set; }
+            public string UpdatedAt { get; set; }
+        }
+
     }
 }

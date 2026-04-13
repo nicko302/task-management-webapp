@@ -269,6 +269,34 @@ header {
     color: rgb(255, 255, 255, 0.2);
 }
 
+.list-edit-input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+    color: white;
+    font-size: 24px;
+    width: 85%;
+    font-weight: bold;
+    padding-left: 6px;
+    margin-top: -2px;
+    position: relative;
+    top: -1px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.list-edit-input:focus {
+    outline: none;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.8);
+}
+.list-edit-input::placeholder {
+    color: rgb(255, 255, 255, 0.5);
+    font-style: italic;
+}
+.list-edit-input:focus::placeholder {
+    color: rgb(255, 255, 255, 0.2);
+}
+
+
+/* symbols */
 .plus {
     font-size: 35px;
     color: rgb(255, 255, 255, 0.6);
@@ -337,6 +365,31 @@ header {
 .edit:hover {
     color: rgb(255, 255, 255)!important;
     opacity: 1 !important;
+}
+
+.edit-list {
+    display: inline-block;
+    position: relative;
+    left: -5px;
+    color: rgb(255, 255, 255, 0.5);
+    width: 40px;
+    text-align: center;
+    font-size: 20px;
+    opacity: 0;
+}
+.edit-list:hover {
+    color: rgb(255, 255, 255) !important;
+    opacity: 1 !important;
+}
+.list-name:hover + .edit-list {
+    opacity: 1 !important;
+}
+
+.list-name:hover ~ ul .newTask {
+    opacity: 0 !important;
+}
+.edit-list:hover ~ ul .newTask {
+    opacity: 0 !important;
 }
 
 .new-list {
