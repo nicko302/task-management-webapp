@@ -154,6 +154,7 @@ header {
     border-radius: 15px;
     width: 250px;
     height: auto;
+    position: relative;
 }
 
 .list-name {
@@ -293,6 +294,22 @@ header {
 }
 .list-edit-input:focus::placeholder {
     color: rgb(255, 255, 255, 0.2);
+}
+
+.colour-container {
+    position: absolute;
+    top: -43px;
+    width: 80%;
+}
+.colour-option {
+    width: 12.5%;
+    float: left;
+    text-align: center;
+    font-size: 85px;
+    -webkit-text-stroke: 1px rgb(255, 255, 255, 0.3);
+}
+.selected {
+    -webkit-text-stroke: 3px white;
 }
 
 
