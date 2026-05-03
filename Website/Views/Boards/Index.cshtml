@@ -2,7 +2,6 @@
 @{
 	Layout = "_Layout";
 }
-<hr />
 
 @if (Model == null)
 {
@@ -21,7 +20,10 @@ else
 			<div class="list-column" style="background-color: @list.HexColour;" data-colour-hex="@list.HexColour" data-colour-text="@list.Colour">
 
 				<span class="list-name" id="label_@list.Id">@list.Name</span>
-				<span class="edit-list" onclick="EditList(this)" id="@list.Id">✎</span>
+				<div class="edit-delete-list" id="@list.Id">
+					<span class="edit-list" onclick="EditList(this)" id="@list.Id">✎</span>
+					<span class="delete-list" onclick="DeleteList(this)" id="@list.Id">🗑</span>
+				</div>
 
 				<ul id="@list.Id">
 					@foreach (var task in list.Tasks)
@@ -41,7 +43,7 @@ else
 
 							<div class="edit-delete-span">
 								<span class="edit" onclick="EditTask(this)" id="@task.Id">✎</span>
-								<span class="delete" onclick="DeleteTask(this)" id="@task.Id">✖</span>
+								<span class="delete" onclick="DeleteTask(this)" id="@task.Id">🗑</span>
 							</div>
 						</li>
 					}

@@ -78,6 +78,58 @@ namespace CRUD_Application.Controllers
             public string NewName { get; set; }
             public string UpdatedAt { get; set; }
         }
+        // function to edit a list's colour in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Lists/EditListColour")]
+        public async Task<IActionResult> EditListColour([FromBody] EditListColourDto data)
+        {
+            var existingList = await _context.List.FindAsync(data.ListId);
+
+            if (existingList == null)
+            {
+                return NotFound($"List with ID {data.ListId} not found.");
+            }
+
+            existingList.Colour = data.NewColour;
+            existingList.UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString();
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        public class EditListColourDto
+        {
+            public int ListId { get; set; }
+            public string NewColour { get; set; }
+            public string UpdatedAt { get; set; }
+        }
+
+
+        // function to remove a list from the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Lists/DeleteList")]
+        public async Task<IActionResult> DeleteList([FromBody] DeleteListDto data)
+        {
+            var listStub = new Models.List { Id = data.ListId };
+
+            _context.Entry(listStub).State = EntityState.Deleted;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound("List already deleted or doesn't exist.");
+            }
+        }
+        public class DeleteListDto
+        {
+            public int ListId { get; set; }
+        }
 
     }
 }

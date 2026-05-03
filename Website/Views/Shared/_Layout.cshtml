@@ -11,62 +11,57 @@
 </head>
 <body>
     <header>
-            <div class="headerBar">
+        <hr class="headerLine">
 
+        <nav>
+            <div class="headerBar">
                 <div class="headerTitle">@ViewData["BoardName"]</div>
                 <div class="headerDesc">•</div>
             <div class="headerDesc">@ViewData["BoardDesc"]</div>
                 
-                @* ------- side bar *@
-                <div class=mobileNavbar>
-                    <button class="mobileNavToggle" onclick="toggleSidebar()">☰</button>
-
-                    <div class="sidebar sidebarHidden" id="sidebar">
-                        <button class="closeSidebar" onclick="toggleSidebar()">✖</button>
-                        <li class="sidebarTitle">
-                            <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
-                        </li>
-                        @*----- display all boards in the sidebar*@
-                        @foreach (var board in _context.Board.ToList())
-                        {
-                            <li>
-                                <a class="sidebarButton"
-                                    asp-controller="Boards"
-                                    asp-action="Index"
-                                    asp-route-id="@board.Id">
-                                    @board.Name
-                                </a>
-                            </li>
-                        }
-
-                        @*
+            @* ------- side bar *@
+            <button class="sidebarToggle" onclick="toggleSidebar()">☰</button>
+            <div class="overlay" id="overlay">
+                <div class="sidebar sidebarHidden" id="sidebar">
+                
+                    <button class="closeSidebar" onclick="toggleSidebar()">«</button>
+                    <li class="sidebarTitle">
+                        <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
+                    </li>
+                    @*----- display all boards in the sidebar*@
+                    @foreach (var board in _context.Board.ToList())
+                    {
                         <li>
-                            <a class="sidebarButton" href=" bookings.php">
-                                Booking
+                            <a class="sidebarButton"
+                                asp-controller="Boards"
+                                asp-action="Index"
+                                asp-route-id="@board.Id">
+                                @board.Name
                             </a>
                         </li>
-                        <li>
-                            <a class="sidebarButton" asp-area="" asp-controller="Categories" asp-action="Index">
-                                Category
-                            </a>
-                        </li>
-                        *@
-                        <li class="sidebarTitle">
-                            <br>
-                            <p style="margin-top: 16px; margin-bottom: 15px;">Shared boards</p>
-                        </li>
-                        
+                    }
+                    
+                    <li>
+                        <span class="sidebarNewBoard" onclick="NewBoard()">
+                            <b>+</b> &nbsp<i>New board</i>
+                        </span>
+                    </li>
+                    
+                    <br />
+                    <hr class="sidebarLine">
+                    <li class="sidebarTitle">
+                        <br>
+                        <p style="margin-top: -10px; margin-bottom: 15px;">Shared boards</p>
+                    </li>
 
-                    </div>
                 </div>
             </div>
         </nav>
 
-
-
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="main">
+        <main role="main">
             @RenderBody()
         </main>
     </div>

@@ -25,7 +25,7 @@ namespace CRUD_Application.Models
             "purple" => "#4d2d47",
             "teal" => "#1d524b",
             "brown" => "#3d332a",
-            "yellow" => "#edd83b",
+            "yellow" => "#bdad39",
             _ => "#333333"
         };
     }

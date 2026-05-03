@@ -1,6 +1,11 @@
 ﻿function toggleSidebar() {
-    const sidebar = document.getElementById("sidebar");
-    sidebar.classList.toggle('sidebarHidden');
+	console.log("1");
+	const overlay = document.getElementById("overlay");
+	overlay.classList.toggle('overlayShown');
+
+	const sidebar = document.getElementById("sidebar");
+	sidebar.classList.toggle('sidebarHidden');
+	console.log("2");
 }
 
 function toggleCheckbox(element) {
@@ -91,6 +96,11 @@ function NewTask(buttonElement) {
 		saveTask();
 	});
 
+	// listener to save the new task when the user clicks off of the input box
+	input.addEventListener("blur", function () {
+		saveTask();
+	});
+
 
 	// display the text box and plus sign
 	li.appendChild(plus);
@@ -99,7 +109,7 @@ function NewTask(buttonElement) {
 
 	buttonElement.style.display = "none"; // hides the new task button
 
-	input.focus(); // focuses on the text box
+	input.focus(); // focuses on the text 
 }
 
 
@@ -187,6 +197,10 @@ function EditTask(buttonElement) {
 		saveTask();
 	});
 
+	// listener to save the new task when the user clicks off of the input box
+	input.addEventListener("blur", function () {
+		saveTask();
+	});
 
 	// assemble and display the text box and submit button
 	span.appendChild(edit);
@@ -207,12 +221,7 @@ function NewList(buttonElement) {
 	const listPos = document.querySelectorAll('.list-column').length + 1; // retrieve the position value of the new list
 	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
 
-
-	// create the new dummy list for name entry
-	//<div class="list-column" style="background-color: bgColour;">
-	//<span class="list-name">list.Name</span>
-
-	const newListDiv = document.createElement('div'); // create new div
+		const newListDiv = document.createElement('div'); // create new div
 	newListDiv.className = "list-column";
 	newListDiv.style.backgroundColor = "#103821";
 	newListDiv.style.paddingTop = "20px";
@@ -267,6 +276,10 @@ function NewList(buttonElement) {
 	plus.addEventListener("click", function () {
 		saveList();
 	});
+	// listener to save the new task when the user clicks off of the input box
+	input.addEventListener("blur", function () {
+		saveList();
+	});
 
 
 	// display the text box and plus sign
@@ -281,7 +294,7 @@ function NewList(buttonElement) {
 function EditList(buttonElement) {
 	const listId = buttonElement.id; // retrieve task's id in the database
 
-	const textElement = buttonElement.previousElementSibling;
+	const textElement = buttonElement.closest(".list-column").querySelector(".list-name");
 	const placeholderText = textElement.innerText; // retrieve the task's content
 
 	// creating the elements
@@ -318,9 +331,9 @@ function EditList(buttonElement) {
 	// create colour edit element
 	const colourContainer = document.createElement("span");
 	colourContainer.className = "colour-container";
+	colourContainer.id = listId;
 
 	colours.forEach(c => {
-		console.log(`Comparing: ArrayItem(${c}) with Current(${currentColourText})`);
 		DisplayColourOption(c, currentColourText, colourContainer);
 	});
 
@@ -328,7 +341,7 @@ function EditList(buttonElement) {
 	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
 
 
-	// helper function for saving the task to the database
+	// helper function for saving the list to the database
 	const saveList = () => {
 		const listContent = input.value;
 
@@ -359,11 +372,17 @@ function EditList(buttonElement) {
 		}
 	});
 
-	// listener to save the new task when the user clicks the plus
+	// listener to save the new list when the user clicks the plus
 	edit.addEventListener("click", function () {
 		saveList();
 	});
 
+	// listener to save the new list when the user clicks off of the input box
+	/*
+	input.addEventListener("blur", function () {
+		saveList();
+	});
+	*/
 
 	// display the colour select element
 	listDiv.prepend(colourContainer); // inserts colour container before the list name
@@ -374,9 +393,8 @@ function EditList(buttonElement) {
 	span.appendChild(edit);
 	textElement.replaceWith(span);
 
-
-
 	input.focus();
+	
 }
 
 // helper function for returning the hex equivalent of a colour name as text
@@ -397,7 +415,7 @@ function TextToColour(text) {
 		case "brown":
 			return "#3d332a";
 		case "yellow":
-			return "#edd83b";
+			return "#bdad39";
 		default:
 			return "#333333";
 	}
@@ -407,10 +425,65 @@ function DisplayColourOption(colourName, currentColourName, container) {
 	colourDot.className = "colour-option";
 	colourDot.style.color = TextToColour(colourName);
 	colourDot.textContent = "•";
+	colourDot.id = colourName;
+	colourDot.onclick = function () {
+		ChangeListColour(this);
+	};
 
 	if (colourName === currentColourName) {
 		colourDot.className += " selected";
 	}
 
 	container.appendChild(colourDot);
+}
+
+function ChangeListColour(colourDotElement) {
+	let colourName = colourDotElement.id; // retrieve the name of the colour to be changed to
+	colourName = String(colourName).charAt(0).toUpperCase() + String(colourName).slice(1); // make the first letter uppercase
+
+	const listId = colourDotElement.closest(".colour-container").id; // retrieve list's id in the database
+
+	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
+
+	// helper function for saving the list to the database
+	const saveList = () => {
+		// call the controller to save the new colour in the database
+		fetch('/Lists/EditListColour', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				ListId: parseInt(listId),
+				NewColour: colourName,
+				UpdatedAt: now
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new colour
+					location.reload();
+				}
+			});
+	}
+
+	saveList();
+}
+
+function DeleteList(buttonElement) {
+	const listId = buttonElement.id; // retrieve list's's id in the database
+	// call the controller to delete the list from the database
+	fetch(`/Lists/DeleteList`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			ListId: parseInt(listId)
+		})
+	})
+		.then(response => {
+			if (response.ok) {
+				// remove the element
+				buttonElement.closest('.list-column').remove();
+			} else {
+				alert("Could not delete list.");
+			}
+		});
 }
