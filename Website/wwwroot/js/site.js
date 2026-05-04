@@ -41,10 +41,12 @@ function NewTask(buttonElement) {
 	const li = document.createElement('li'); // create new list item
 	li.style.listStyle = "none";
 	li.style.marginTop = "-20px";
+	li.style.marginBottom = "-2px";
 
 	const input = document.createElement("input");
 	input.type = "text";
 	input.className = "task-edit-input";
+	input.style.marginLeft = "-3px";
 	input.placeholder = "Enter new task";
 
 	const plus = document.createElement("span");
@@ -62,7 +64,10 @@ function NewTask(buttonElement) {
 	const saveTask = () => {
 		const taskContent = input.value;
 
-		if (taskContent.trim() === "") return; // ensure empty tasks aren't saved
+		// ensure empty tasks are dealt with
+		if (taskContent.trim() === "") {
+			taskContent = " ";
+		} 
 
 		// call the controller to save the new task in the database
 		fetch('/Tasks/CreateTask', {
@@ -114,7 +119,9 @@ function NewTask(buttonElement) {
 
 
 function DeleteTask(buttonElement) {
-	const taskId = buttonElement.id; // retrieve task's id in the database
+	const taskId = buttonElement.id; // retrieve task's id
+	const taskPos = buttonElement.getAttribute('data-task-pos'); // retrieve task's position value
+	const tasksInList = buttonElement.parentElement.parentElement.id;
 
 	// call the controller to delete the task from the database
 	fetch(`/Tasks/DeleteTask`, {
@@ -135,7 +142,7 @@ function DeleteTask(buttonElement) {
 }
 
 function EditTask(buttonElement) {
-	const taskId = buttonElement.id; // retrieve task's id in the database
+	const taskId = buttonElement.id; // retrieve task's id
 
 	const textElement = document.getElementById('label_' + taskId);
 	const placeholderText = textElement.innerText; // retrieve the task's content
@@ -148,15 +155,21 @@ function EditTask(buttonElement) {
 	span.style.marginTop = "0px";
 
 	const edit = document.createElement("span");
-	edit.className = "edit-submit";
+	edit.className = "edit-submit-task";
 	edit.textContent = "✎";
-	edit.id = "edit-submit";
+	edit.id = "edit-submit-task";
 
 	const input = document.createElement("input");
 	input.type = "text";
 	input.className = "task-edit-input";
 	input.value = placeholderText;
 	input.style.transform = 'translateX(2px)';
+
+	// hide the up + down arrows
+	const arrowDown = li.querySelector(".down");
+	const arrowUp = li.querySelector(".up");
+	arrowDown.style.display = "none";
+	arrowUp.style.display = "none";
 
 	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
 
@@ -214,6 +227,32 @@ function EditTask(buttonElement) {
 	input.focus();
 }
 
+function MoveTask(buttonElement, direction) {
+	const taskId = buttonElement.id; // retrieve task's id
+
+	// helper function for saving the new value to the database
+	const saveTask = () => {
+
+		// call the controller to save the new value in the database
+		fetch('/Tasks/MoveTask', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				TaskId: parseInt(taskId),
+				Direction: direction,
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new task position
+					location.reload();
+				}
+			});
+	}
+
+	saveTask();
+}
+
 
 function NewList(buttonElement) {
 	const listsRow = buttonElement.parentElement; // retrieve lists-row element
@@ -221,7 +260,7 @@ function NewList(buttonElement) {
 	const listPos = document.querySelectorAll('.list-column').length + 1; // retrieve the position value of the new list
 	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
 
-		const newListDiv = document.createElement('div'); // create new div
+	const newListDiv = document.createElement('div'); // create new div
 	newListDiv.className = "list-column";
 	newListDiv.style.backgroundColor = "#103821";
 	newListDiv.style.paddingTop = "20px";
@@ -240,9 +279,12 @@ function NewList(buttonElement) {
 
 	// helper function for saving the list to the database
 	const saveList = () => {
-		const listName = input.value;
+		let listName = input.value;
 
-		if (listName.trim() === "") return; // ensure empty tasks aren't saved
+		// ensure empty tasks are dealt with
+		if (listName.trim() === "") {
+			listName = "Untitled"
+		}
 
 		// call the controller to save the new task in the database
 		fetch('/Lists/CreateList', {
@@ -291,11 +333,15 @@ function NewList(buttonElement) {
 }
 
 
-function EditList(buttonElement) {
-	const listId = buttonElement.id; // retrieve task's id in the database
+function EditList(titleElement) {
+	const buttonElement = titleElement.nextElementSibling.querySelector(".colour-list");
+
+	buttonElement.parentElement.classList.add("isEditing"); // hide the edit/delete buttons
+
+	const listId = titleElement.id; // retrieve list's id in the database
 
 	const textElement = buttonElement.closest(".list-column").querySelector(".list-name");
-	const placeholderText = textElement.innerText; // retrieve the task's content
+	const placeholderText = textElement.innerText; // retrieve the list's content
 
 	// creating the elements
 	const span = document.createElement("span");
@@ -307,10 +353,13 @@ function EditList(buttonElement) {
 
 	const edit = document.createElement("span");
 	edit.className = "edit-submit";
-	edit.textContent = "✎";
+	edit.textContent = "a";
 	edit.id = "edit-submit";
-	edit.style.left = "40px";
-	edit.style.fontSize = "25px";
+
+	const deleteElement = document.createElement("span");
+	deleteElement.className = "delete-list";
+	deleteElement.textContent = "🗑";
+	deleteElement.id = listId;
 
 	const input = document.createElement("input");
 	input.type = "text";
@@ -319,27 +368,13 @@ function EditList(buttonElement) {
 	input.style.transform = 'translateX(2px)';
 	input.maxLength = "14";
 
-	// retrieve current colour
-	const colours = ["red", "green", "blue", "orange", "purple", "teal", "brown", "yellow"];
-	const listDiv = buttonElement.closest(".list-column");
-	const currentColourHex = listDiv.getAttribute('data-colour-hex');
-	const currentColourText = listDiv.getAttribute('data-colour-text').toLowerCase();
-
-	console.log("Hex from HTML:", currentColourHex);
-	console.log("Translated Text:", currentColourText);
-
-	// create colour edit element
-	const colourContainer = document.createElement("span");
-	colourContainer.className = "colour-container";
-	colourContainer.id = listId;
-
-	colours.forEach(c => {
-		DisplayColourOption(c, currentColourText, colourContainer);
-	});
-
+	// fix positioning of other elements
+	const tasks = buttonElement.parentElement.nextElementSibling;
+	tasks.style.marginTop = "50px";
+	const newTaskButton = tasks.querySelector("button");
+	newTaskButton.style.display = "none";
 
 	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
-
 
 	// helper function for saving the list to the database
 	const saveList = () => {
@@ -378,19 +413,20 @@ function EditList(buttonElement) {
 	});
 
 	// listener to save the new list when the user clicks off of the input box
-	/*
 	input.addEventListener("blur", function () {
 		saveList();
 	});
-	*/
 
-	// display the colour select element
-	listDiv.prepend(colourContainer); // inserts colour container before the list name
+	// listener to delete the list when the user clicks the delete button
+	deleteElement.addEventListener("click", function () {
+		DeleteList(deleteElement);
+	});
 
 
 	// assemble and display the text box and submit button
 	span.appendChild(input);
 	span.appendChild(edit);
+	span.appendChild(deleteElement);
 	textElement.replaceWith(span);
 
 	input.focus();
@@ -419,6 +455,34 @@ function TextToColour(text) {
 		default:
 			return "#333333";
 	}
+}
+
+function EditListColour(buttonElement) {
+	buttonElement.parentElement.classList.add("isEditing"); // hide the edit/delete buttons
+
+	const listId = buttonElement.id; // retrieve list's id in the database
+
+	// retrieve current colour
+	const colours = ["red", "green", "blue", "orange", "purple", "teal", "brown", "yellow"];
+	const listDiv = buttonElement.closest(".list-column");
+	const currentColourHex = listDiv.getAttribute('data-colour-hex');
+	const currentColourText = listDiv.getAttribute('data-colour-text').toLowerCase();
+
+	console.log("Hex from HTML:", currentColourHex);
+	console.log("Translated Text:", currentColourText);
+
+	// create colour edit element
+	const colourContainer = document.createElement("span");
+	colourContainer.className = "colour-container";
+	colourContainer.id = listId;
+
+	colours.forEach(c => {
+		DisplayColourOption(c, currentColourText, colourContainer);
+	});
+
+	// display the colour select element
+	listDiv.prepend(colourContainer); // inserts colour container before the list name
+
 }
 function DisplayColourOption(colourName, currentColourName, container) {
 	const colourDot = document.createElement("span"); // Rename to avoid conflict
@@ -486,4 +550,62 @@ function DeleteList(buttonElement) {
 				alert("Could not delete list.");
 			}
 		});
+}
+
+
+function MoveList(buttonElement, direction) {
+	const listId = buttonElement.id; // retrieve list's id
+
+	// helper function for saving the new value to the database
+	const saveList = () => {
+
+		// call the controller to save the new value in the database
+		fetch('/Lists/MoveList', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				ListId: parseInt(listId),
+				Direction: direction,
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new list position
+					location.reload();
+				}
+			});
+	}
+
+	saveList();
+}
+
+
+
+function NewBoard(buttonElement) {
+
+	const allBoards = document.querySelectorAll(".board-button")
+	const newBoardPos = allBoards.length + 1; // calculate the position for the new 
+
+	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
+
+	// call the controller to save the new board in the database
+	fetch('/Boards/CreateBoard', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			Name: "New board",
+			Position: newBoardPos,
+			CreatedAt: now,
+			UpdatedAt: now
+		})
+	})
+		.then(response => {
+			if (response.ok) {
+				return response.json();
+			}
+		})
+		.then(boardId => {
+			// redirect to the new board webpage upon receiving the response from the server
+			window.location.href = '/Boards/Index/' + boardId;
+		})
 }

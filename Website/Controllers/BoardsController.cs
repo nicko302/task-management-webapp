@@ -1,5 +1,6 @@
 ﻿using CRUD_Application.Data;
 using CRUD_Application.Models;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,7 +34,48 @@ namespace CRUD_Application.Controllers
             return View("Index", null);
         }
 
-        
+
+        // function to add a new board to the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Boards/CreateBoard")]
+        public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto data)
+        {
+            // create and save the new board
+            var newBoard = new Models.Board
+            {
+                Name = data.Name,
+                CreatedAt = data.CreatedAt ?? DateTime.Now.ToString(),
+                UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString(),
+                Colour = "Green"
+            };
+
+            _context.Board.Add(newBoard);
+            await _context.SaveChangesAsync();
+
+            int userId = 1; /////////////// MAKE SURE TO CHANGE THIS TO USE ACTUAL USERID
+
+            // create the join table entry
+            var newUserHasBoard = new Models.UserHasBoard
+            {
+                UserId = userId,
+                BoardId = newBoard.Id,
+                Position = data.Position
+            };
+
+            _context.UserHasBoard.Add(newUserHasBoard);
+            await _context.SaveChangesAsync();
+
+            return Ok(newBoard.Id);
+        }
+        public class CreateBoardDto
+        {
+            public string Name { get; set; }
+            public int Position { get; set; }
+            public string CreatedAt { get; set; }
+            public string UpdatedAt { get; set; }
+        }
+
 
         /** 
         // GET: Board/Create

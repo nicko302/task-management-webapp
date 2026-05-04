@@ -112,24 +112,77 @@ namespace CRUD_Application.Controllers
         [Route("Lists/DeleteList")]
         public async Task<IActionResult> DeleteList([FromBody] DeleteListDto data)
         {
-            var listStub = new Models.List { Id = data.ListId };
+            var deletedList = await _context.List.FindAsync(data.ListId);
+            int deletedListPosition = deletedList.Position;
+            int boardId = deletedList.BoardId;
 
-            _context.Entry(listStub).State = EntityState.Deleted;
+            List<Models.List> allListsInBoard = await _context.List.Where(l => l.BoardId == boardId).ToListAsync();
 
-            try
+            // lower the position value of all proceeding tasks by 1
+            foreach (var list in allListsInBoard)
             {
-                await _context.SaveChangesAsync();
-                return Ok();
+                if (list.Position > deletedListPosition)
+                {
+                    list.Position -= 1;
+                }
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                return NotFound("List already deleted or doesn't exist.");
-            }
+
+            // delete the task and save new position values
+            _context.List.Remove(deletedList);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
         public class DeleteListDto
         {
             public int ListId { get; set; }
         }
 
+
+        // function to change a list's position value in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Lists/MoveList")]
+        public async Task<IActionResult> MoveTask([FromBody] MoveListDto data)
+        {
+            var movedList = await _context.List.FindAsync(data.ListId); // find the board to be moved
+            int movedListPosition = movedList.Position;
+            int boardId = movedList.BoardId;
+
+            List<Models.List> allListsInBoard = await _context.List.Where(l => l.BoardId == boardId).ToListAsync(); // retrieve all lists in the board
+
+            if (data.Direction == "left")
+            {
+                foreach (var list in allListsInBoard)
+                {
+                    if (list.Position == movedListPosition - 1)
+                    {
+                        // effectively swap the position values of the current and the previous list
+                        list.Position += 1;
+                        movedList.Position -= 1;
+                    }
+                }
+            }
+            else if (data.Direction == "right")
+            {
+                foreach (var list in allListsInBoard)
+                {
+                    if (list.Position == movedListPosition + 1)
+                    {
+                        // effectively swap the position values of the current and the following list
+                        list.Position -= 1;
+                        movedList.Position += 1;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+
+        }
+        public class MoveListDto
+        {
+            public int ListId { get; set; }
+            public string Direction { get; set; }
+        }
     }
 }

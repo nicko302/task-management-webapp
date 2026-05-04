@@ -14,6 +14,7 @@ namespace CRUD_Application.Models
         public int? JoinCode { get; set; } // INT
 
         public virtual ICollection<Models.List> Lists { get; set; } = new List<Models.List>();
+        public virtual ICollection<UserHasBoard> UserHasBoards { get; set; }
     }
 
 }

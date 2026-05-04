@@ -77,19 +77,25 @@ namespace CRUD_Application.Controllers
         [Route("Tasks/DeleteTask")]
         public async Task<IActionResult> DeleteTask([FromBody] DeleteTaskDto data)
         {
-            var taskStub = new Models.Task { Id = data.TaskId };
+            var deletedTask = await _context.Task.FindAsync(data.TaskId);
+            int deletedTaskPosition = deletedTask.Position;
+            int listId = deletedTask.ListId;
 
-            _context.Entry(taskStub).State = EntityState.Deleted;
+            List<Models.Task> allTasksInList = await _context.Task.Where(t => t.ListId == listId).ToListAsync();
 
-            try
+            // lower the position value of all proceeding tasks by 1
+            foreach (var task in allTasksInList)
             {
-                await _context.SaveChangesAsync();
-                return Ok();
+                if (task.Position > deletedTaskPosition)
+                {
+                    task.Position -= 1;
+                }
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                return NotFound("Task already deleted or doesn't exist.");
-            }
+
+            // delete the task and save new position values
+            _context.Task.Remove(deletedTask);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
         public class DeleteTaskDto
         {
@@ -122,6 +128,54 @@ namespace CRUD_Application.Controllers
             public int TaskId { get; set; }
             public string Content { get; set; }
             public string UpdatedAt { get; set; }
+        }
+
+
+        // function to change a task's position value in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Tasks/MoveTask")]
+        public async Task<IActionResult> MoveTask([FromBody] MoveTaskDto data)
+        {
+            var movedTask = await _context.Task.FindAsync(data.TaskId); // find the task to be moved
+            int movedTaskPosition = movedTask.Position;
+            int listId = movedTask.ListId;
+
+            List<Models.Task> allTasksInList = await _context.Task.Where(t => t.ListId == listId).ToListAsync(); // retrieve all tasks in the list
+
+            if (data.Direction == "up")
+            {
+                foreach (var task in allTasksInList)
+                {
+                    if (task.Position == movedTaskPosition - 1)
+                    {
+                        // effectively swap the position values of the current and the previous element
+                        task.Position += 1;
+                        movedTask.Position -= 1;
+                    }
+                }
+            }
+            else if (data.Direction == "down")
+            {
+                foreach (var task in allTasksInList)
+                {
+                    if (task.Position == movedTaskPosition + 1)
+                    {
+                        // effectively swap the position values of the current and the following element
+                        task.Position -= 1;
+                        movedTask.Position += 1;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+
+        }
+        public class MoveTaskDto
+        {
+            public int TaskId { get; set; }
+            public string Direction { get; set; }
         }
     }
 }

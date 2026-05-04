@@ -83,7 +83,18 @@ header {
     position: absolute;
     top: 80px;
 }
+.headerEdit {
+    font-size: 23px;
+    padding-left: 20px;
+    padding-top: 2px;
+    color: #eaeaea;
+}
 
+.userIcon {
+    position: absolute;
+    right: 40px;
+    cursor: pointer;
+}
 
 .overlay {
     background: #00000000;
@@ -232,7 +243,7 @@ header {
     padding: 35px 30px;
     min-width: 150px;
     border-radius: 15px;
-    width: 260px;
+    width: 290px;
     height: auto;
     position: relative;
 }
@@ -241,7 +252,22 @@ header {
     font-family: Poppins;
     font-weight: bold;
     font-size: 23px;
-    margin-left: 8px;
+    margin-left: 2px;
+    z-index: 100 !important;
+    position: relative;
+    padding: 2px 6px;
+
+    border-radius: 5px;
+}
+    .list-name:hover {
+        background-color: rgb(250, 250, 250, 0.08);
+    }
+
+ul li:first-child .up {
+    display: none !important;
+}
+ul li:nth-last-child(2) .down {
+    display: none !important;
 }
 
 
@@ -327,7 +353,7 @@ header {
     color: rgb(255, 255, 255, 1) !important;
 }
 .list-column:hover .newTask {
-    color: rgb(255, 255, 255, 0.3);
+    color: rgb(255, 255, 255, 0.4);
 }
 
 .task-edit-input {
@@ -337,9 +363,9 @@ header {
     font-family: Poppins;
     font-size: 16px;
     width: 85%;
-    margin-bottom: 0px;
     margin-left: -1px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 4px;
+    padding-left: 4px;
 }
 .task-edit-input:focus {
     outline: none;
@@ -351,6 +377,7 @@ header {
     color: rgb(255, 255, 255, 0.4);
 }
 .task-edit-input:focus::placeholder {
+    font-family: Poppins;
     color: rgb(255, 255, 255, 0.2);
 }
 
@@ -371,7 +398,7 @@ header {
 }
 .list-edit-input:focus {
     outline: none;
-    border-bottom: 1px solid rgb(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgb(255, 255, 255, 0.4);
     font-family: Poppins;
 }
 .list-edit-input::placeholder {
@@ -386,15 +413,23 @@ header {
 
 .colour-container {
     position: absolute;
-    top: -43px;
-    width: 80%;
+    top: -39px;
+    width: 74%;
+    text-align: center;
+    left: 0px;
+    padding-left: 13%;
+    padding-right: 13%;
 }
 .colour-option {
+    cursor: pointer;
     width: 12.5%;
     float: left;
     text-align: center;
-    font-size: 85px;
+    font-size: 80px;
     -webkit-text-stroke: 1px rgb(255, 255, 255, 0.3);
+}
+.colour-option:hover {
+    text-shadow: 0px 0px 4px rgb(255, 255, 255, 1);
 }
 .selected {
     -webkit-text-stroke: 3px white;
@@ -419,17 +454,43 @@ header {
 
 
 .edit-submit {
-    font-size: 21px;
+    font-size: 35px;
+    text-align: center;
     color: rgb(255, 255, 255, 0.6);
     background-color: transparent;
     border: none;
-    margin-left: -32px;
-    margin-right: 12px;
-    top: 2px;
-    position: relative;
+    padding-left: 5px;
+    padding-right: 5px;
+    top: 38px;
+    position: absolute;
+    right: 10px;
     transition: 0.1s;
+    font-family: Webdings;
+    font-weight: lighter;
+    cursor: pointer;
+    z-index: 10;
 }
 .edit-submit:hover {
+    color: rgb(255, 255, 255, 1);
+}
+
+.edit-submit-task {
+    font-size: 23px;
+    color: rgb(255, 255, 255, 0.6);
+    background-color: transparent;
+    border: none;
+    margin-right: 12px;
+    padding-left: 10px;
+    top: 0px;
+    position: absolute;
+    left: -43px;
+    transition: 0.1s;
+    font-family: Webdings;
+    font-weight: lighter;
+    cursor: pointer;
+    z-index: 10;
+}
+.edit-submit-task:hover {
     color: rgb(255, 255, 255, 1);
 }
 
@@ -442,19 +503,20 @@ header {
     opacity: 0;
     transition: 0.1s;
 }
-.container:hover + .edit-delete-span
-{
+.container:hover + .edit-delete-span{
     opacity: 1;
 }
+
 .edit-delete-span:hover {
     opacity: 1;
 }
 
 .delete {
     right: 1px;
-    color: rgb(255, 255, 255, 0.5);
+    color: rgb(255, 255, 255, 0.6);
     width: 30px;
     font-size: 18px;
+    cursor: pointer;
 }
 .delete:hover {
     color: rgb(255, 255, 255) !important;
@@ -463,42 +525,89 @@ header {
 
 .edit {
     padding-right: 1px;
-    color: rgb(255, 255, 255, 0.5);
+    color: rgb(255, 255, 255, 0.6);
     width: 30px;
     font-size: 18px;
+    cursor: pointer;
 }
 .edit:hover {
     color: rgb(255, 255, 255)!important;
     opacity: 1 !important;
 }
 
-
-.edit-delete-list {
-    display: inline-block;
-    position: relative;
-    left: -15px;
-    padding-left: 20px;
-    padding-right: 10px;
-    color: rgb(255, 255, 255, 0.5);
-    width: 40px;
-    text-align: center;
+.up, .down {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
     font-size: 20px;
+    position: absolute;
+    left: -62px;
+    height: 0.8em;
+    cursor: pointer;
+    transition: 0.1s;
+    opacity: 0;
+}
+.up {
+    margin-top: -4px;
+    z-index: 4;
+    overflow: hidden;
+}
+.down {
+    margin-top: 7.5px;
+    z-index: 2;
+}
+.up:hover, .down:hover {
+    opacity: 1 !important;
+}
+.task-li:hover .up,
+.task-li:hover .down {
+    opacity: 0.5;
+}
+
+
+
+
+.delete-list {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 12px;
+    position: absolute;
+    right: 28%;
+    top: 7px;
+    font-size: 19px;
     opacity: 0;
     transition: 0.1s;
+    box-sizing: border-box;
 }
-.list-column:hover .edit-delete-list,
-.edit-delete-list:hover{
-    opacity: 1 !important;
-}
-.edit-list:hover,
 .delete-list:hover {
-    color: rgb(255, 255, 255) !important;
     opacity: 1 !important;
-    transition: 0.1s;
 }
-.delete-list {
-    position: relative;
-    left: 2px;
+.colour-list {
+    font-size: 24px;
+    background-color: transparent;
+    border: none;
+    padding-left: 12px;
+    padding-right: 20px;
+    left: 28%;
+    position: absolute;
+    transition: 0.1s;
+    cursor: pointer;
+    opacity: 0;
+    box-sizing: border-box;
+}
+.colour-list:hover {
+    opacity: 1 !important;
+}
+
+.isEditing {
+    transition: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 .list-name:hover ~ ul .newTask {
@@ -508,15 +617,92 @@ header {
     opacity: 0 !important;
 }
 
+.list-options-icons {
+    height: 70px;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    padding-top: 4px;
+}
+.list-options-icons:hover .colour-list,
+.list-options-icons:hover .delete-list,
+.list-options-icons:hover .move-list-left,
+.list-options-icons:hover .move-list-right {
+    opacity: 0.3;
+}
+.move-list-left {
+    cursor: pointer;
+    text-align: center;
+    padding-right: 5px;
+    padding-left: 20px;
+    position: absolute;
+    left: 36%;
+    font-size: 25px;
+    opacity: 0;
+    transition: 0.1s;
+    top: 1px;
+    box-sizing: border-box;
+}
+.move-list-right {
+    cursor: pointer;
+    text-align: center;
+    padding-right: 20px;
+    padding-left: 5px;
+    position: absolute;
+    right: 36%;
+    font-size: 25px;
+    opacity: 0;
+    transition: 0.1s;
+    top: 1px;
+    box-sizing: border-box;
+}
+
+.lists-row .list-column:first-child .move-list-left {
+    display: none !important;
+}
+
+.lists-row .list-column:nth-last-child(2) .move-list-right {
+    display: none !important;
+}
+
+.edit-list {
+    cursor: pointer;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    right: 15px;
+    top: 35px;
+    font-size: 22px;
+    opacity: 0;
+    transition: 0.1s;
+}
+
+.move-list-right:hover,
+.move-list-left:hover,
+.edit-list:hover{
+    opacity: 1 !important;
+}
+.list-options-icons:hover .edit-list {
+    opacity: 0.6;
+}
+
 
 .new-list {
+    font-family: Poppins;
     display: flex;
     align-items: center;
     height: auto;
     align-self: stretch;
     font-size: 45px;
-    opacity: 0;
+    opacity: 0.1;
     transition: 0.2s;
+    text-align: center;
+    cursor: pointer;
 }
 .new-list:hover {
     color: rgb(255, 255, 255) !important;
@@ -524,7 +710,7 @@ header {
 }
 
 .lists-row:hover .new-list {
-    opacity: 0.4;
+    opacity: 0.6;
 }
 
 .list-name-edit-input {
@@ -533,11 +719,13 @@ header {
     outline: none;
     border-bottom: 1px solid rgb(255, 255, 255, 0.3);
     color: white;
-    font-size: 22px;
+    font-size: 23px;
     width: 85%;
-    margin-bottom: 0px;
+    margin-bottom: 14px;
     font-family: Poppins;
     font-weight: bold;
+    padding-left: 8px;
+    margin-top: 14px;
 }
 .list-name-edit-input:focus {
     color: rgb(255, 255, 255, 1);
