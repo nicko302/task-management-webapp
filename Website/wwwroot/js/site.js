@@ -417,11 +417,6 @@ function EditList(titleElement) {
 		saveList();
 	});
 
-	// listener to delete the list when the user clicks the delete button
-	deleteElement.addEventListener("click", function () {
-		DeleteList(deleteElement);
-	});
-
 
 	// assemble and display the text box and submit button
 	span.appendChild(input);
@@ -532,8 +527,43 @@ function ChangeListColour(colourDotElement) {
 	saveList();
 }
 
-function DeleteList(buttonElement) {
-	const listId = buttonElement.id; // retrieve list's's id in the database
+function DeleteListConfirmation(buttonElement) {
+	const optionsContainer = buttonElement.parentElement;
+	const listContainer = optionsContainer.parentElement;
+
+	optionsContainer.remove();
+
+	const confirmationContainer = document.createElement("div");
+	confirmationContainer.className = "list-options-icons";
+	confirmationContainer.style.display = "block";
+
+	const text = document.createElement("p");
+	text.innerHTML = "Delete?"
+
+	const confirmButton = document.createElement("span");
+	confirmButton.className = "delete-confirm";
+	confirmButton.innerHTML = "a";
+
+	const cancelButton = document.createElement("span");
+	cancelButton.className = "delete-cancel";
+	cancelButton.innerHTML = "✕";
+
+	confirmationContainer.appendChild(text);
+	confirmationContainer.appendChild(confirmButton);
+	confirmationContainer.appendChild(cancelButton);
+	listContainer.appendChild(confirmationContainer);
+
+	// listener to delete the list when the user clicks confirm
+	confirmButton.addEventListener("click", function () {
+		DeleteList(confirmButton, buttonElement.id);
+	});
+	// listener to reload the page when the user clicks cancel
+	cancelButton.addEventListener("click", function () {
+		location.reload();
+	});
+}
+
+function DeleteList(confirmButtonElement, listId) {
 	// call the controller to delete the list from the database
 	fetch(`/Lists/DeleteList`, {
 		method: 'POST',
@@ -545,7 +575,7 @@ function DeleteList(buttonElement) {
 		.then(response => {
 			if (response.ok) {
 				// remove the element
-				buttonElement.closest('.list-column').remove();
+				confirmButtonElement.closest('.list-column').remove();
 			} else {
 				alert("Could not delete list.");
 			}
@@ -608,4 +638,145 @@ function NewBoard(buttonElement) {
 			// redirect to the new board webpage upon receiving the response from the server
 			window.location.href = '/Boards/Index/' + boardId;
 		})
+}
+
+function EditBoardName(nameElement) {
+	const boardId = nameElement.id; // retrieve board's id in the database
+
+	const placeholderText = nameElement.innerText; // retrieve the board name
+
+	// creating the elements
+	const div = document.createElement("span");
+	div.style.marginTop = "0px";
+	div.style.display = "block";
+	div.style.overflow = "visible";
+	div.style.marginBottom = "5px";
+
+	const input = document.createElement("input");
+	input.type = "text";
+	input.className = "board-edit-input";
+	input.value = placeholderText;
+	input.maxLength = 20;
+	input.style.transform = 'translateX(-20px)';
+
+	// set the input's width dynamically
+	const updateWidth = () => {
+		input.style.width = input.value.length + "ch";
+	};
+	updateWidth();
+	input.addEventListener("input", updateWidth);
+
+	const now = new Date().toISOString(); // get today's date
+
+	// helper function for saving the board to the database
+	const saveBoard = () => {
+		console.log("ok");
+		const boardNameContent = input.value;
+
+		if (boardNameContent.trim() === "") return; // ensure empty board names aren't saved
+
+		// call the controller to save the new board in the database
+		fetch('/Boards/EditBoardName', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				BoardId: parseInt(boardId),
+				NewName: boardNameContent,
+				UpdatedAt: now
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new board
+					location.reload();
+				}
+			});
+	}
+	// listener to save the new board when the user presses enter
+	input.addEventListener("keypress", function (event) {
+		if (event.key === "Enter") {
+			saveBoard();
+		}
+	});
+	// listener to save the new board when the user clicks off of the input box
+	input.addEventListener("blur", function () {
+		saveBoard();
+	});
+
+	// place elements on the page
+	div.appendChild(input);
+	nameElement.replaceWith(div);
+	input.focus();
+	input.select();
+
+}
+
+function EditBoardDesc(descElement) {
+	const boardId = descElement.id; // retrieve board's id in the database
+
+	const placeholderText = descElement.innerText; // retrieve the board name
+
+	// creating the elements
+	const div = document.createElement("span");
+	div.style.marginTop = "0px";
+	div.style.display = "block";
+	div.style.overflow = "visible";
+	div.style.marginBottom = "5px";
+
+	const input = document.createElement("input");
+	input.type = "text";
+	input.className = "board-edit-desc-input";
+	input.value = placeholderText;
+	input.maxLength = 50;
+	input.style.transform = 'translateX(-20px)';
+
+	// set the input's width dynamically
+	const updateWidth = () => {
+		input.style.width = input.value.length + "ch";
+	};
+	updateWidth();
+	input.addEventListener("input", updateWidth);
+
+	const now = new Date().toISOString(); // get today's date
+
+	// helper function for saving the board to the database
+	const saveBoard = () => {
+		console.log("ok");
+		const descContent = input.value;
+
+		if (descContent.trim() === "") return; // ensure empty board names aren't saved
+
+		// call the controller to save the new board in the database
+		fetch('/Boards/EditBoardDesc', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				BoardId: parseInt(boardId),
+				NewDesc: descContent,
+				UpdatedAt: now
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new board
+					location.reload();
+				}
+			});
+	}
+	// listener to save the new board when the user presses enter
+	input.addEventListener("keypress", function (event) {
+		if (event.key === "Enter") {
+			saveBoard();
+		}
+	});
+	// listener to save the new board when the user clicks off of the input box
+	input.addEventListener("blur", function () {
+		saveBoard();
+	});
+
+	// place elements on the page
+	div.appendChild(input);
+	descElement.replaceWith(div);
+	input.focus();
+	input.select();
 }

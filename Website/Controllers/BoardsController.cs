@@ -45,9 +45,9 @@ namespace CRUD_Application.Controllers
             var newBoard = new Models.Board
             {
                 Name = data.Name,
+                Desc = "No description",
                 CreatedAt = data.CreatedAt ?? DateTime.Now.ToString(),
                 UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString(),
-                Colour = "Green"
             };
 
             _context.Board.Add(newBoard);
@@ -76,6 +76,59 @@ namespace CRUD_Application.Controllers
             public string UpdatedAt { get; set; }
         }
 
+        // function to edit an existing board's NAME in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Boards/EditBoardName")]
+        public async Task<IActionResult> EditBoardName([FromBody] EditBoardNameDto data)
+        {
+            var existingBoard = await _context.Board.FindAsync(data.BoardId);
+
+            if (existingBoard == null)
+            {
+                return NotFound($"Board with ID {data.BoardId} not found.");
+            }
+
+            existingBoard.Name = data.NewName;
+            existingBoard.UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString();
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        public class EditBoardNameDto
+        {
+            public int BoardId { get; set; }
+            public string NewName { get; set; }
+            public string UpdatedAt { get; set; }
+        }
+
+        // function to edit an existing board's DESCRIPTION in the database
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Boards/EditBoardDesc")]
+        public async Task<IActionResult> EditBoardDesc([FromBody] EditBoardDescDto data)
+        {
+            var existingBoard = await _context.Board.FindAsync(data.BoardId);
+
+            if (existingBoard == null)
+            {
+                return NotFound($"Board with ID {data.BoardId} not found.");
+            }
+
+            existingBoard.Desc = data.NewDesc;
+            existingBoard.UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString();
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        public class EditBoardDescDto
+        {
+            public int BoardId { get; set; }
+            public string NewDesc { get; set; }
+            public string UpdatedAt { get; set; }
+        }
 
         /** 
         // GET: Board/Create

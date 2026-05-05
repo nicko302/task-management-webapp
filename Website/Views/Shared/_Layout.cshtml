@@ -15,12 +15,12 @@
         <hr class="headerLine">
 
         <nav>
+            @* ------- header bar *@
             <div class="headerBar">
-                <div class="headerTitle">@ViewData["BoardName"]</div>
-                <div class="headerDesc">•</div>
-                <div class="headerDesc">@ViewData["BoardDesc"]</div>
-                
-                <div class="headerEdit">✎</div>
+                <div class="headerTitle" onclick="EditBoardName(this)" id="@Model.Id">@ViewData["BoardName"]</div>
+                <div class="headerDot">•</div>
+                <div class="headerDesc" onclick="EditBoardDesc(this)" id="@Model.Id">@ViewData["BoardDesc"]</div>
+                <div class="headerDelete" id="@Model.Id"><b>🗑</b></div>
 
                 <div class="userIcon">
                     <svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
@@ -46,9 +46,9 @@
                     </li>
                     @*----- display all boards in the sidebar, belonging to the current user*@
                     @{
-						var userId = 1; // replace with actual user ID retrieval logic
+						var userId = 1; /////////////// replace with actual user ID retrieval logic
 
-						// fetch boards for the user with eager loading of related Board entities
+						// fetch boards belonging to the current user
                         var boardsOfUser = _context.UserHasBoard
                            .Include(u => u.Board)
                            .Where(u => u.UserId == userId)
@@ -64,6 +64,12 @@
                                        asp-route-id="@uhb.BoardId">
                                     @uhb.Board.Name
                                 </a>
+
+                                <span class="sidebarBoardOptions" onclick="OpenBoardOptions(@uhb.BoardId)"><b>⋮</b></span>
+                                <div class="sidebarUpDownDiv">
+                                    <span class="sidebarUp" onclick="MoveBoard(@uhb.BoardId, 'up')">⏶</span>
+                                    <span class="sidebarDown" onclick="MoveBoard(@uhb.BoardId, 'down')">⏷</span>
+                                </div>
                             </li>
                         }
                     }

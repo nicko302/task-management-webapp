@@ -7,7 +7,6 @@ namespace CRUD_Application.Models
         [Key] public int Id { get; set; } // PK INT AUTOINCREMENT
         public string Name { get; set; } // TEXT NOT NULL
         public string? Desc { get; set; } // TEXT
-        public string Colour { get; set; } // TEXT NOT NULL
         public string CreatedAt { get; set; } // TEXT NOT NULL
         public string UpdatedAt { get; set; } // TEXT NOT NULL
         public int? AdminId { get; set; } // INT
