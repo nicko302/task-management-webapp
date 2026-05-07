@@ -22,7 +22,16 @@ else
 				<span class="list-name" id="@list.Id" onclick="EditList(this)">@list.Name</span>
 
 				<div class="list-options-icons" id="@list.Id">
-					<span class="colour-list" onclick="EditListColour(this)" id="@list.Id">
+
+					<span class="move-list-left" title="Move left" onclick="MoveList(this, 'left')" id="@list.Id">⏴</span>
+
+					<div class="list-transfer-container" id="@Model.Id">
+						<div class="click-off-menu" onclick="CloseTransferMenu(this)"></div>
+						<span class="transfer-list" title="Move to another board" onclick="MoveListToBoard(this)" id="@list.Id"><b>⇆</b></span>
+						<div class="transfer-menu" style="display: none;"></div>
+					</div>
+
+					<span class="colour-list" title="Change colour" onclick="EditListColour(this)" id="@list.Id">
 						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
 							 viewBox="0 0 16 16"
 							 style="stroke: currentColor; stroke-width: 0.8px; stroke-linejoin: round;">
@@ -31,10 +40,10 @@ else
 						</svg>
 					</span>
 
-					<span class="move-list-left" onclick="MoveList(this, 'left')" id="@list.Id">⏴</span>
-					<span class="move-list-right" onclick="MoveList(this, 'right')" id="@list.Id">⏵</span>
+					<span class="delete-list" title="Delete" onclick="DeleteListConfirmation(this)" id="@list.Id"><b>✕</b></span>
 
-					<span class="delete-list" onclick="DeleteListConfirmation(this)" id="@list.Id"><b>✕</b></span>
+					<span class="move-list-right" title="Move right" onclick="MoveList(this, 'right')" id="@list.Id">⏵</span>
+
 				</div>
 
 
@@ -58,8 +67,8 @@ else
 							</label>
 
 							<div class="edit-delete-span">
-								<span class="edit" onclick="EditTask(this)" id="@task.Id">✎</span>
-								<span class="delete" onclick="DeleteTask(this)" id="@task.Id" data-task-pos=@task.Position>✕</span>
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="@task.Id">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="@task.Id" data-task-pos=@task.Position>✕</span>
 							</div>
 						</li>
 					}
@@ -67,14 +76,14 @@ else
 					@* new task button *@
 					<li style="list-style: none">
 						<label class="container"></label>
-						<button class="newTask" onclick="NewTask(this)">+</button>
+						<button class="newTask" title="New task" onclick="NewTask(this)">+</button>
 
 					</li>
 				</ul>
 			</div>
 		}
 
-		<span class="new-list" onclick="NewList(this)" data-board-id="@Model.Id."><b>+</b></span>
+		<span class="new-list" title="New list" onclick="NewList(this)" data-board-id="@Model.Id."><b>+</b></span>
 
 	</div>
 }

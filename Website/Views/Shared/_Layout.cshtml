@@ -20,7 +20,14 @@
                 <div class="headerTitle" onclick="EditBoardName(this)" id="@Model.Id"><h1>@ViewData["BoardName"]</h1></div>
                 <div class="headerDot">•</div>
                 <div class="headerDesc" onclick="EditBoardDesc(this)" id="@Model.Id">@ViewData["BoardDesc"]</div>
-                <div class="headerDelete" onclick="DeleteBoard(this)" id="@Model.Id"><b>🗑</b></div>
+                <div class="headerBoardInfo" id="@Model.Id">
+                    i
+                    <div class="boardInfo">
+                        <p><b>Created:</b><br /> @Model.CreatedAt <br /></p>
+                        <p style="margin-top: -5px;"><b>Last updated:</b><br /> @Model.UpdatedAt</p>
+                    </div>
+                </div>
+                <div class="headerDelete" title="Delete" onclick="DeleteBoard(this)" id="@Model.Id"><b>🗑</b></div>
 
                 <div class="userIcon">
                     <svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
@@ -68,7 +75,7 @@
                                         @board.Board.Name
                                     </a>
 
-                                    <span class="sidebarBoardOptions" onclick="OpenBoardOptions(this, @board.BoardId, '@board.Board.Name', '@board.Board.Desc')"><b>&nbsp⋮&nbsp&nbsp</b></span>
+                                    <span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, @board.BoardId, `@board.Board.Name`, `@board.Board.Desc`)"><b>&nbsp⋮&nbsp&nbsp</b></span>
                                     <div class="sidebarUpDownDiv">
                                         <span class="sidebarUp" onclick="MoveBoard(@board.BoardId, 'up')">⏶</span>
                                         <span class="sidebarDown" onclick="MoveBoard(@board.BoardId, 'down')">⏷</span>
@@ -112,7 +119,7 @@
                                         @uhb.Board.Name
                                     </a>
 
-                                    <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, @uhb.BoardId, '@uhb.Board.Name', '@uhb.Board.Desc')"><b>&nbsp⋮&nbsp&nbsp</b></span>
+                                    <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, @uhb.BoardId, `@uhb.Board.Name`, `@uhb.Board.Desc`)"><b>&nbsp⋮&nbsp&nbsp</b></span>
                                     <div class="sidebarUpDownDiv">
                                         <span class="sidebarUp" onclick="MoveBoard(@uhb.BoardId, 'up')">⏶</span>
                                         <span class="sidebarDown" onclick="MoveBoard(@uhb.BoardId, 'down')">⏷</span>

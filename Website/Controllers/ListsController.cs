@@ -2,6 +2,7 @@
 using CRUD_Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace CRUD_Application.Controllers
@@ -78,6 +79,7 @@ namespace CRUD_Application.Controllers
             public string NewName { get; set; }
             public string UpdatedAt { get; set; }
         }
+
         // function to edit a list's colour in the database
         [HttpPost]
         [IgnoreAntiforgeryToken]
@@ -183,6 +185,41 @@ namespace CRUD_Application.Controllers
         {
             public int ListId { get; set; }
             public string Direction { get; set; }
+        }
+
+        // function to transfer a list to another board
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Lists/TransferList")]
+        public async Task<IActionResult> TransferList([FromBody] TransferListDto data)
+        {
+            var userId = 1; /////// REPLACE WHEN LOGIN WORKS
+
+            var existingList = await _context.List.FindAsync(data.ListId);
+            if (existingList == null) return NotFound($"List with ID {data.ListId} not found.");
+
+            // check if the user has access to the board
+            var hasAccess = await _context.UserHasBoard
+                .AnyAsync(uhb => uhb.UserId == userId && uhb.BoardId == data.BoardId);
+            if (!hasAccess) return NotFound("No access to this board.");
+
+            // calculate the new position value of the list in the new board
+            var listsInBoard = await _context.List
+               .Where(l => l.BoardId == data.BoardId)
+               .Select(l => l.Id)
+               .ToListAsync();
+            var newListPosition = listsInBoard.Count() + 1;
+
+            existingList.BoardId = data.BoardId;
+            existingList.Position = newListPosition;
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        public class TransferListDto
+        {
+            public int ListId { get; set; }
+            public int BoardId { get; set; }
         }
     }
 }

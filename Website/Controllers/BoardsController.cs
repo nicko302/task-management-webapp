@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Runtime.Intrinsics.Arm;
 
 namespace CRUD_Application.Controllers
 {
@@ -80,19 +81,43 @@ namespace CRUD_Application.Controllers
         [Route("Boards/CreateBoard")]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto data)
         {
-            // create and save the new board
+            var userId = 1; /////////////// MAKE SURE TO CHANGE THIS TO USE ACTUAL USERID
+
             var newBoard = new Models.Board
+            { };
+
+            if (data.IsShared)
             {
-                Name = data.Name,
-                Desc = "No description",
-                CreatedAt = data.CreatedAt ?? DateTime.Now.ToString(),
-                UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString(),
-            };
+                // generate a new join code for the new shared board
+                Random rnd = new Random();
+                var joinCode = rnd.Next(1000, 10000);
+
+                // create and save a new SHARED board
+                newBoard = new Models.Board
+                {
+
+                    Name = data.Name,
+                    Desc = "No description",
+                    CreatedAt = data.CreatedAt ?? DateTime.Now.ToString(),
+                    UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString(),
+                    AdminId = userId,
+                    JoinCode = joinCode
+                };
+            }
+            else
+            {
+                // create and save a new PRIVATE board
+                newBoard = new Models.Board
+                {
+                    Name = data.Name,
+                    Desc = "No description",
+                    CreatedAt = data.CreatedAt ?? DateTime.Now.ToString(),
+                    UpdatedAt = data.UpdatedAt ?? DateTime.Now.ToString(),
+                };
+            }
 
             _context.Board.Add(newBoard);
             await _context.SaveChangesAsync();
-
-            int userId = 1; /////////////// MAKE SURE TO CHANGE THIS TO USE ACTUAL USERID
 
             // create the join table entry
             var newUserHasBoard = new Models.UserHasBoard
@@ -113,6 +138,7 @@ namespace CRUD_Application.Controllers
             public int Position { get; set; }
             public string CreatedAt { get; set; }
             public string UpdatedAt { get; set; }
+            public bool IsShared { get; set; }
         }
 
         // function to edit an existing board's NAME in the database
@@ -337,6 +363,8 @@ namespace CRUD_Application.Controllers
         [Route("Boards/GetBoardMembers")]
         public async Task<IActionResult> GetBoardMembers([FromBody] GetBoardMembersDto data)
         {
+            var userName = "nick"; ////////////// replace when user login system works
+
             var board = await _context.Board.FindAsync(data.BoardId);
 
             var memberNames = await _context.UserHasBoard
@@ -353,7 +381,7 @@ namespace CRUD_Application.Controllers
                .Select(u => u.User.Username)
                .FirstOrDefaultAsync();
 
-            return Ok( new { members = memberNames, admin = groupAdminName });
+            return Ok( new { members = memberNames, admin = groupAdminName, user = userName });
         }
         public class GetBoardMembersDto
         {
@@ -369,7 +397,7 @@ namespace CRUD_Application.Controllers
         {
             var userId = 1; ////////////// replace when user login system works
 
-            
+
             // retrieve the user board connection
             var movedBoard = await _context.UserHasBoard
                 .Include(uhb => uhb.Board)
@@ -406,6 +434,8 @@ namespace CRUD_Application.Controllers
         [Route("Boards/RemoveMember")]
         public async Task<IActionResult> RemoveMember([FromBody] RemoveMemberDTO data)
         {
+            var userId = 1; /////////// CHANGE WHEN LOGIN LOGIC WORKS
+
             // retrieve the user and board connection
             var user = await _context.User.FirstOrDefaultAsync(u => u.Username == data.MemberName);
             var userHasBoard = await _context.UserHasBoard
@@ -416,7 +446,13 @@ namespace CRUD_Application.Controllers
             _context.UserHasBoard.Remove(userHasBoard);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            // retrieve the board ID of the user's top board, to redirect to after deletion
+            var firstBoardId = await _context.UserHasBoard
+               .Where(u => u.UserId == userId && u.Position == 1)
+               .Select(u => u.BoardId)
+               .FirstOrDefaultAsync();
+
+            return Ok(firstBoardId);
         }
         public class RemoveMemberDTO
         {
@@ -472,6 +508,29 @@ namespace CRUD_Application.Controllers
         public class UserJoinBoardDto
         {
             public int JoinCode { get; set; }
+        }
+
+
+        // function to retrieve all accessible boards of a user
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        [Route("Boards/GetUserBoards")]
+        public async Task<IActionResult> GetUserBoards()
+        {
+            var userId = 1; /////////////// REPLACE WHEN LOGIN SYSTEM WORKS
+
+            // return all boards belonging to the current user
+            var boardsOfUser = await _context.UserHasBoard
+               .Where(uhb => uhb.UserId == userId)
+               .OrderBy(uhb => uhb.Position)
+               .Select(uhb => new
+               {
+                   BoardId = uhb.BoardId,
+                   BoardName = uhb.Board.Name
+               })
+               .ToListAsync();
+
+            return Ok(boardsOfUser);
         }
     }
 }
