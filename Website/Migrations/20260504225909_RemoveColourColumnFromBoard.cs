@@ -10,9 +10,7 @@ namespace CRUD_Application.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Colour",
-                table: "Board");
+            //migrationBuilder.DropColumn(name: "Colour", table: "Board");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UpdatedAt",

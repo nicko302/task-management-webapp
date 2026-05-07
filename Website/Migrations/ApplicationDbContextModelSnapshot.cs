@@ -56,27 +56,6 @@ namespace CRUD_Application.Migrations
                     b.ToTable("Board");
                 });
 
-            modelBuilder.Entity("CRUD_Application.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Category");
-                });
-
             modelBuilder.Entity("CRUD_Application.Models.List", b =>
                 {
                     b.Property<int>("Id")

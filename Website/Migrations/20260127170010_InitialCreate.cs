@@ -15,7 +15,7 @@ namespace CRUD_Application.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: " ",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -27,7 +27,7 @@ namespace CRUD_Application.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_ ", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
@@ -36,7 +36,7 @@ namespace CRUD_Application.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Category");
+                name: " ");
         }
     }
 }

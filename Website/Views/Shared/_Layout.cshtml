@@ -17,10 +17,10 @@
         <nav>
             @* ------- header bar *@
             <div class="headerBar">
-                <div class="headerTitle" onclick="EditBoardName(this)" id="@Model.Id">@ViewData["BoardName"]</div>
+                <div class="headerTitle" onclick="EditBoardName(this)" id="@Model.Id"><h1>@ViewData["BoardName"]</h1></div>
                 <div class="headerDot">•</div>
                 <div class="headerDesc" onclick="EditBoardDesc(this)" id="@Model.Id">@ViewData["BoardDesc"]</div>
-                <div class="headerDelete" id="@Model.Id"><b>🗑</b></div>
+                <div class="headerDelete" onclick="DeleteBoard(this)" id="@Model.Id"><b>🗑</b></div>
 
                 <div class="userIcon">
                     <svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
@@ -44,56 +44,43 @@
                     <li class="sidebarTitle">
                         <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
                     </li>
-                    @*----- display all boards in the sidebar, belonging to the current user*@
-                    @{
-						var userId = 1; /////////////// replace with actual user ID retrieval logic
 
-						// fetch boards belonging to the current user
-                        var boardsOfUser = _context.UserHasBoard
-                           .Include(u => u.Board)
-                           .Where(u => u.UserId == userId)
-                           .ToList();
+                    <ul class="user-boards-list">
+                        @*----- display all boards in the sidebar, belonging to the current user*@
+                        @{
+						    var userId = 1; /////////////// replace with actual user ID retrieval logic
+
+						    // fetch boards belonging to the current user
+                            var boardsOfUser = _context.UserHasBoard
+                               .Include(uhb => uhb.Board)
+                               .Where(uhb => uhb.UserId == userId && uhb.Board.AdminId == null)
+                               .OrderBy(uhb => uhb.Position)
+                               .ToList();
                     
-                        foreach (var uhb in boardsOfUser)
-                        {
-                            <li>
-                                <a class="sidebarButton board-button"
-                                        data-board-id="@uhb.BoardId"
+                            foreach (var board in boardsOfUser)
+                            {
+                                <li>
+                                    <a class="sidebarButton my-board-button"
+                                        data-board-id="@board.BoardId"
                                         asp-controller="Boards"
                                         asp-action="Index"
-                                       asp-route-id="@uhb.BoardId">
-                                    @uhb.Board.Name
-                                </a>
+                                        asp-route-id="@board.BoardId">
+                                        @board.Board.Name
+                                    </a>
 
-                                <span class="sidebarBoardOptions" onclick="OpenBoardOptions(@uhb.BoardId)"><b>⋮</b></span>
-                                <div class="sidebarUpDownDiv">
-                                    <span class="sidebarUp" onclick="MoveBoard(@uhb.BoardId, 'up')">⏶</span>
-                                    <span class="sidebarDown" onclick="MoveBoard(@uhb.BoardId, 'down')">⏷</span>
-                                </div>
-                            </li>
+                                    <span class="sidebarBoardOptions" onclick="OpenBoardOptions(this, @board.BoardId, '@board.Board.Name', '@board.Board.Desc')"><b>&nbsp⋮&nbsp&nbsp</b></span>
+                                    <div class="sidebarUpDownDiv">
+                                        <span class="sidebarUp" onclick="MoveBoard(@board.BoardId, 'up')">⏶</span>
+                                        <span class="sidebarDown" onclick="MoveBoard(@board.BoardId, 'down')">⏷</span>
+                                    </div>
+                                </li>
+                            }
                         }
-                    }
-
-
-                    @*foreach (var board in _context.Board.ToList())
-                    {
-                        @if (board.UserHasBoards.Any(u => u.UserId == 1))
-                        {
-                            <li>
-                                <a class="sidebarButton board-button"
-                                        data-board-id="@board.Id"
-                                        asp-controller="Boards"
-                                        asp-action="Index"
-                                        asp-route-id="@board.Id">
-                                    @board.Name
-                                </a>
-                            </li>
-                        }
-                    }*@
+                    </ul>
                     
                     <li>
                         <span class="sidebarNewBoard" onclick="NewBoard(this)">
-                            <b>+</b> &nbsp<i>New board</i>
+                            <b>+</b> &nbspNew board
                         </span>
                     </li>
                     
@@ -102,6 +89,47 @@
                     <li class="sidebarTitle">
                         <br>
                         <p style="margin-top: -10px; margin-bottom: 15px;">Shared boards</p>
+                    </li>
+
+                    <ul class="shared-boards-list">
+                        @*----- display all shared boards in the sidebar that the user is part of*@
+                        @{
+                            // fetch boards belonging to the current user
+                            var sharedBoardsOfUser = _context.UserHasBoard
+                               .Include(uhb => uhb.Board)
+                               .Where(uhb => uhb.UserId == userId && uhb.Board.AdminId != null)
+                               .OrderBy(uhb => uhb.Position)
+                               .ToList();
+                    
+                            foreach (var uhb in sharedBoardsOfUser)
+                            {
+                                <li>
+                                    <a class="sidebarButton shared-board-button"
+                                           data-board-id="@uhb.BoardId"
+                                           asp-controller="Boards"
+                                           asp-action="Index"
+                                           asp-route-id="@uhb.BoardId">
+                                        @uhb.Board.Name
+                                    </a>
+
+                                    <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, @uhb.BoardId, '@uhb.Board.Name', '@uhb.Board.Desc')"><b>&nbsp⋮&nbsp&nbsp</b></span>
+                                    <div class="sidebarUpDownDiv">
+                                        <span class="sidebarUp" onclick="MoveBoard(@uhb.BoardId, 'up')">⏶</span>
+                                        <span class="sidebarDown" onclick="MoveBoard(@uhb.BoardId, 'down')">⏷</span>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <li>
+                        <span class="sidebarNewBoard" onclick="JoinSharedBoard(this)">
+                            <b>➥</b> &nbspJoin board
+                        </span>
+                    </li>
+                    <li>
+                        <span class="sidebarNewBoard" onclick="NewSharedBoard(this)">
+                            <b>+</b> &nbspNew board
+                        </span>
                     </li>
 
                 </div>

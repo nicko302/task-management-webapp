@@ -24,7 +24,7 @@ namespace CRUD_Application.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("CRUD_Application.Models.Category", b =>
+            modelBuilder.Entity("CRUD_Application.Models. ", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace CRUD_Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("// ");
                 });
 #pragma warning restore 612, 618
         }

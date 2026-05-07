@@ -1,11 +1,9 @@
 ﻿function toggleSidebar() {
-	console.log("1");
 	const overlay = document.getElementById("overlay");
 	overlay.classList.toggle('overlayShown');
 
 	const sidebar = document.getElementById("sidebar");
 	sidebar.classList.toggle('sidebarHidden');
-	console.log("2");
 }
 
 function toggleCheckbox(element) {
@@ -613,7 +611,7 @@ function MoveList(buttonElement, direction) {
 
 function NewBoard(buttonElement) {
 
-	const allBoards = document.querySelectorAll(".board-button")
+	const allBoards = document.querySelectorAll(".my-board-button")
 	const newBoardPos = allBoards.length + 1; // calculate the position for the new 
 
 	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
@@ -623,7 +621,7 @@ function NewBoard(buttonElement) {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			Name: "New board",
+			Name: "My Board #" + newBoardPos,
 			Position: newBoardPos,
 			CreatedAt: now,
 			UpdatedAt: now
@@ -666,7 +664,7 @@ function EditBoardName(nameElement) {
 	updateWidth();
 	input.addEventListener("input", updateWidth);
 
-	const now = new Date().toISOString(); // get today's date
+	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
 
 	// helper function for saving the board to the database
 	const saveBoard = () => {
@@ -737,7 +735,7 @@ function EditBoardDesc(descElement) {
 	updateWidth();
 	input.addEventListener("input", updateWidth);
 
-	const now = new Date().toISOString(); // get today's date
+	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
 
 	// helper function for saving the board to the database
 	const saveBoard = () => {
@@ -779,4 +777,460 @@ function EditBoardDesc(descElement) {
 	descElement.replaceWith(div);
 	input.focus();
 	input.select();
+}
+
+
+function MoveBoard(boardId, direction) {
+	console.log("attempted to move board: " + boardId)
+	// call the controller to save the new value in the database
+	fetch('/Boards/MoveBoard', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			BoardId: parseInt(boardId),
+			Direction: direction,
+		})
+	})
+		.then(response => {
+			if (response.ok) {
+				// reload the page to properly display the new list position
+				location.reload();
+			}
+		});
+}
+
+
+function OpenBoardOptions(buttonElement, boardId, boardName, boardDesc) {
+	toggleSidebar();
+	const overlay = document.getElementById("overlay");
+	overlay.classList.toggle('overlayShown');
+
+	// create the options panel elements
+	const panel = document.createElement("div");
+	panel.className = buttonElement.classList.contains("shared") ? "shared-board-options-panel" : "board-options-panel";
+	panel.innerHTML = "<h1>Board options</h1>";
+
+	const cancelButton = document.createElement("button");
+	cancelButton.className = "board-options-cancel";
+	cancelButton.innerHTML = "✕";
+
+	const nameInput = document.createElement("input");
+	nameInput.className = "board-options-input";
+	nameInput.id = "board-name";
+	nameInput.classList.add("name");
+	nameInput.value = boardName;
+	const nameLabel = document.createElement("label");
+	nameLabel.htmlFor = "board-name";
+	nameLabel.innerHTML = "Board name: <br/>";
+
+	const descInput = document.createElement("textarea");
+	descInput.className = "board-options-input";
+	descInput.id = "board-desc";
+	descInput.classList.add("desc");
+	descInput.value = boardDesc;
+	descInput.maxLength = 50;
+	const descLabel = document.createElement("label");
+	descLabel.htmlFor = "board-desc";
+	descLabel.innerHTML = "Board description: <br/>";
+
+	const saveButton = document.createElement("button");
+	saveButton.className = "board-options-save";
+	saveButton.innerHTML = "✔&nbsp Save changes";
+
+	const deleteButton = document.createElement("button");
+	deleteButton.className = "board-options-delete";
+	deleteButton.innerHTML = "🗑&nbsp Delete board";
+	let deleteConfirmation = false;
+
+	const convertButton = document.createElement("button");
+	convertButton.className = "board-options-convert";
+	convertButton.innerHTML = "⇄&nbsp Convert to shared board?";
+
+	// create share board options panel elements
+	const sidePanel = document.createElement("div");
+	sidePanel.className = "shared-board-options-side-panel";
+	sidePanel.innerHTML = "<h1>Board members</h1>";
+	let boardMembers = [];
+
+	const joinCodeContainer = document.createElement("div");
+	joinCodeContainer.className = "join-code-container";
+
+	let joinCode = "0000";
+	const joinCodeElement = document.createElement("span");
+	joinCodeElement.className = "join-code";
+	joinCodeElement.innerHTML = "<p style = 'font-size: 18px;'>Join code: <p>" + joinCode;
+
+	const refreshCodeButton = document.createElement("span");
+	refreshCodeButton.className = "refresh-code-button";
+	refreshCodeButton.innerText = "Re-generate";
+
+
+
+	// --- helper functions
+
+	// helper function for the deletion confirmation
+	const cancelDeleteBoardConfirmation = () => {
+		deleteConfirmation = false;
+		deleteButton.innerHTML = "🗑&nbsp Delete board";
+		deleteButton.style.fontSize = "16px";
+		deleteButton.style.backgroundColor = "#7c1c1c";
+		deleteButton.style.padding = "10px";
+	}
+
+	const now = new Date().toISOString().substring(0, 10); // retrieve the current date
+	// helper function for saving the board to the database
+	const saveBoard = () => {
+		const nameContent = nameInput.value;
+		const descContent = descInput.value;
+
+		// ensure empty values aren't saved
+		if (nameContent.trim() === "") return;
+		if (descContent.trim() === "") return;
+
+		// call the controller to save the new board in the database
+		fetch('/Boards/EditBoard', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				BoardId: parseInt(boardId),
+				NewName: nameContent,
+				NewDesc: descContent,
+				JoinCode: joinCode,
+				UpdatedAt: now
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new board
+					location.reload();
+				}
+			});
+	}
+
+	// helper function for saving the board to the database
+	const deleteBoard = () => {
+
+		// call the controller to delete the board from the database
+		fetch(`/Boards/DeleteBoard`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				BoardId: parseInt(boardId)
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+				else {
+					alert("Could not delete board.");
+				}
+			})
+			.then(firstBoardId => {
+				// redirect to the first board belonging to the user if they are currently on the board's page
+				if (window.location.pathname == "/Boards/Index/" + boardId) {
+					window.location.href = '/Boards/Index/' + firstBoardId;
+				}
+				else {
+					window.location.reload();
+				}
+			})
+	}
+
+	//helper function to retrieve the join code for the shared board
+	const displayJoinCode = () => {
+		// retrieve the join code from the database
+		fetch(`/Boards/GetJoinCode`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ BoardId: parseInt(boardId) })
+		})
+			.then(response => response.json())
+			.then(data => {
+				// display the board's join code
+				joinCode = data.code;
+				joinCodeElement.innerHTML = "<p style = 'font-size: 18px;'>Join code: <p>" + joinCode;
+			})
+			.catch(error => console.error('Error trying to get code! ', error));
+	}
+
+	//helper function to retrieve all members of the shared board
+	const displayBoardMembers = () => {
+		// retrieve the join code from the database
+		fetch(`/Boards/GetBoardMembers`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ BoardId: parseInt(boardId) })
+		})
+			.then(response => response.json())
+			.then(data => {
+				// display the board's join code
+				boardMembers = data.members;
+				adminName = data.admin;
+
+				sidePanel.innerHTML = "<h1>Board members</h1>\n<ul>";
+				sidePanel.innerHTML += `<li><b>Admin: </b>${adminName}</li>`;
+				for (let memberName of boardMembers) { // display all members of the board
+					if (memberName != adminName) {
+						sidePanel.innerHTML += `
+							<li>
+								${memberName} 
+								<button class="remove-member" onclick="RemoveMember('${memberName}', ${boardId}, this)">✕</button>
+							</li>`;
+					}
+				}
+				sidePanel.innerHTML += "</ul>";
+			})
+			.catch(error => console.error('Error trying to get members! ', error));
+	}
+
+
+
+	// -- appending the elements
+
+	// append all options panel elements to page
+	panel.appendChild(cancelButton);
+	panel.appendChild(nameLabel);
+	panel.appendChild(nameInput);
+	panel.appendChild(descLabel);
+	panel.appendChild(descInput);
+	panel.appendChild(saveButton);
+	panel.appendChild(deleteButton);
+
+	// append the elements for individual boards ONLY
+	if (!buttonElement.classList.contains("shared")) {
+		panel.appendChild(convertButton);
+		overlay.appendChild(panel);
+	}
+	// append the elements for shared boards ONLY
+	else {
+		overlay.appendChild(panel);
+		overlay.appendChild(sidePanel);
+		panel.appendChild(joinCodeContainer);
+		joinCodeContainer.appendChild(joinCodeElement);
+		joinCodeContainer.appendChild(refreshCodeButton);
+
+		saveButton.style.marginTop = "130px"
+
+		displayJoinCode();
+		displayBoardMembers();
+	}
+
+
+	// -- listeners
+
+	// listener to delete the list when the user clicks save
+	saveButton.addEventListener("click", function () {
+		saveBoard(boardId);
+	});
+
+	// listener to delete the list when the user clicks delete
+	deleteButton.addEventListener("click", function () {
+		console.log("delete confirmation active: " + deleteConfirmation)
+		if (!deleteConfirmation) {
+			deleteConfirmation = true;
+			console.log("now: " + deleteConfirmation)
+			deleteButton.innerHTML = "<b>⚠︎&nbsp Confirm deletion</b>";
+			deleteButton.style.fontSize = "18px";
+			deleteButton.style.backgroundColor = "#a81818"
+			deleteButton.style.padding = "14px";
+
+			setTimeout(cancelDeleteBoardConfirmation, 3000)
+		}
+		else {
+			console.log("now: " + deleteConfirmation)
+			deleteBoard(boardId);
+		}
+	});
+
+	// listener to hide the options panels when the user clicks cancel
+	cancelButton.addEventListener("click", function () {
+		panel.remove();
+		const sidePanelElement = overlay.querySelector(".shared-board-options-side-panel");
+		if (sidePanelElement) { sidePanelElement.remove(); }
+
+		overlay.classList.toggle('overlayShown');
+	});
+
+	// listener to convert a board to a shared board
+	convertButton.addEventListener("click", function () {
+		joinCode = Math.floor(1000 + Math.random() * 9000);
+
+		// call the controller to change the board to a shared board
+		fetch('/Boards/ConvertBoard', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				BoardId: parseInt(boardId),
+				JoinCode: parseInt(joinCode),
+				UpdatedAt: now
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					// reload the page to properly display the new board
+					location.reload();
+				}
+			});
+	});
+
+	// listener to generate a new join code
+	refreshCodeButton.addEventListener("click", function () {
+		joinCode = Math.floor(1000 + Math.random() * 9000);
+		joinCodeElement.innerHTML = "<p style = 'font-size: 18px;'>Join code: <p>" + joinCode;
+	});
+
+}
+
+
+// function to remove a member from a shared bored
+function RemoveMember(memberName, boardId, buttonElement) {
+	console.log("trying to remove member: " + memberName);
+
+	// call the controller to delete the board from the database
+	fetch(`/Boards/RemoveMember`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			BoardId: parseInt(boardId),
+			MemberName: memberName
+		})
+	})
+		.then(response => {
+			if (response.ok) {
+				buttonElement.parentElement.remove();
+				return;
+			}
+			else {
+				alert("Could not remove user.");
+			}
+		})
+}
+
+function JoinSharedBoard(buttonElement) {
+	toggleSidebar();
+	const overlay = document.getElementById("overlay");
+	overlay.classList.toggle('overlayShown');
+
+	// create the options panel elements
+	const panel = document.createElement("div");
+	panel.className = "board-join-panel";
+	panel.innerHTML = "<h1>Join a board</h1>";
+
+	const cancelButton = document.createElement("button");
+	cancelButton.className = "board-options-cancel";
+	cancelButton.innerHTML = "✕";
+
+	const codeInput = document.createElement("input");
+	codeInput.className = "board-code-input";
+	codeInput.id = "join-code";
+	codeInput.placeholder = "Code";
+	codeInput.maxLength = 4;
+	const codeLabel = document.createElement("label");
+	codeLabel.htmlFor = "join-code";
+	codeLabel.innerHTML = "Enter join code: <br/>";
+
+	const joinButton = document.createElement("button");
+	joinButton.className = "board-options-convert";
+	joinButton.innerHTML = "Join";
+
+	// append elements to the page
+	panel.appendChild(cancelButton);
+	panel.appendChild(codeLabel);
+	panel.appendChild(codeInput);
+	panel.appendChild(joinButton);
+	overlay.appendChild(panel);
+
+	codeInput.focus();
+
+	// listener to hide the options panels when the user clicks cancel
+	cancelButton.addEventListener("click", function () {
+		panel.remove();
+		const sidePanelElement = overlay.querySelector(".board-join-panel");
+		if (sidePanelElement) { sidePanelElement.remove(); }
+
+		overlay.classList.toggle('overlayShown');
+	});
+
+	// listener for the join button
+	joinButton.addEventListener("click", function () {
+		const joinCode = codeInput.value;
+
+		// call the controller to check if a board with that code exists
+		fetch('/Boards/UserJoinBoard', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				JoinCode: parseInt(joinCode),
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+				else {
+					alert("Could not join board.");
+				}
+			})
+			.then(boardId => {
+				// redirect to the newly joined board
+				window.location.href = '/Boards/Index/' + boardId;
+			});
+	});
+}
+
+
+function DeleteBoard(buttonElement) {
+
+	boardId = buttonElement.id;
+
+	buttonElement.innerHTML = "•&nbsp&nbsp&nbsp&nbspDelete?"
+	buttonElement.className = "delete-board-confirm"
+
+	const confirmButton = document.createElement("button");
+	confirmButton.className = "delete-confirm-yes";
+	confirmButton.innerHTML = "a";
+
+	const cancelButton = document.createElement("button");
+	cancelButton.className = "delete-confirm-no";
+	cancelButton.innerHTML = "✕";
+
+	buttonElement.appendChild(confirmButton);
+	buttonElement.appendChild(cancelButton);
+
+	// listener to delete the board when the user clicks confirm
+	confirmButton.addEventListener("click", function () {
+		deleteBoard();
+	});
+
+	// listener to reload the page when the user clicks cancel
+	cancelButton.addEventListener("click", function () {
+		window.location.reload();
+	});
+
+
+	// helper function for saving the board to the database
+	const deleteBoard = () => {
+
+		// call the controller to delete the board from the database
+		fetch(`/Boards/DeleteBoard`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				BoardId: parseInt(boardId)
+			})
+		})
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+				else {
+					alert("Could not delete board.");
+				}
+			})
+			.then(firstBoardId => {
+				// redirect to the first board belonging to the user
+				window.location.href = '/Boards/Index/' + firstBoardId;
+			})
+	}
 }

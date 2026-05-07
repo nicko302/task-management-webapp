@@ -14,7 +14,6 @@ namespace CRUD_Application.Data
             base.OnModelCreating(builder);
         }
 
-        public DbSet<Category> Category { get; set; }
         public DbSet<Board> Board { get; set; }
         public DbSet<List> List { get; set; }
         public DbSet<Models.Task> Task { get; set; }

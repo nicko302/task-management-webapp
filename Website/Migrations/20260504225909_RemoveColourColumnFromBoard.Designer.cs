@@ -59,7 +59,7 @@ namespace CRUD_Application.Migrations
                     b.ToTable("Board");
                 });
 
-            modelBuilder.Entity("CRUD_Application.Models.Category", b =>
+            modelBuilder.Entity("CRUD_Application.Models. ", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +77,7 @@ namespace CRUD_Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable(" ");
                 });
 
             modelBuilder.Entity("CRUD_Application.Models.List", b =>

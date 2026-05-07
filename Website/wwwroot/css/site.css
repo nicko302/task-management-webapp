@@ -66,10 +66,11 @@ header {
     margin-left: 100px;
 }
 
-.headerTitle {
+.headerTitle h1 {
     font-family: Poppins Semibold;
     font-size: 28px;
-    padding: 0px 6px;
+    padding: 0px 6px !important;
+    overflow: hidden;
 }
 .headerDot {
     font-family: Poppins;
@@ -88,7 +89,7 @@ header {
     padding: 0px 6px;
     color: #eaeaea;
 }
-.headerTitle:hover,
+.headerTitle h1:hover,
 .headerDesc:hover {
     background-color: rgb(250, 250, 250, 0.08);
 }
@@ -146,6 +147,44 @@ header {
     opacity: 1 !important;
 }
 
+.delete-board-confirm {
+    font-family: "Poppins";
+    font-size: 20px;
+    color: #ffffff76;
+    margin-left: 20px;
+    pointer-events: none;
+}
+
+.delete-confirm-yes {
+    font-family: "Poppins";
+    font-family: Webdings;
+    font-size: 30px;
+    opacity: 0.6;
+    margin-left: 20px;
+    cursor: pointer;
+    color: white;
+    background: none;
+    border: none;
+    pointer-events: all;
+}
+.delete-confirm-no {
+    font-family: "Poppins";
+    font-size: 20px;
+    font-weight: bolder;
+    opacity: 0.6;
+    margin-left: 20px;
+    cursor: pointer;
+    color: white;
+    background: none;
+    border: none;
+    margin-left: 0px;
+    pointer-events: all;
+}
+.delete-confirm-yes:hover,
+.delete-confirm-no:hover {
+    opacity: 0.9;
+}
+
 .userIcon {
     position: absolute;
     right: 40px;
@@ -153,6 +192,9 @@ header {
 }
 
 .overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #00000000;
     width: 100%;
     height: 100%;
@@ -208,7 +250,7 @@ header {
     margin-left: 0px;
     box-sizing: border-box;
     font-family: Poppins;
-    font-size: 18px;
+    font-size: 19px;
     transition: font-size 0.02s ease-in-out;
     border-radius: 2px;
 }
@@ -228,12 +270,21 @@ header {
     padding-top: 5px;
     margin-right: 10px;
 }
-.sidebar li:first-child .sidebarUp {
-    display: none !important;
+
+.user-boards-list,
+.shared-boards-list {
+    list-style: none;
+    padding: 0 !important;
 }
-.sidebar li:nth-last-child(2) .sidebarDown {
-    display: none !important;
+.user-boards-list li:first-child .sidebarUp,
+.shared-boards-list li:first-child .sidebarUp {
+    visibility: hidden;
 }
+.user-boards-list li:last-child .sidebarDown,
+.shared-boards-list li:last-child .sidebarDown {
+    visibility: hidden;
+}
+
 .sidebarUp, .sidebarDown {
     display: flex;
     align-items: center;
@@ -268,7 +319,7 @@ li:hover .sidebarDown {
 .sidebarBoardOptions {
     z-index: 22;
     position: absolute;
-    right: 0px;
+    right: -10px;
     margin-top: -51px;
     margin-right: 8px;
     padding: 2px;
@@ -280,13 +331,242 @@ li:hover .sidebarDown {
     overflow: hidden;
 }
 
+.shared-board-options-panel {
+    background-color: #100f12;
+    border-radius: 20px;
+    z-index: 200 !important;
+    width: 460px;
+    height: 580px;
+    margin: auto;
+    margin-right: 10px;
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Poppins';
+    font-size: 18px;
+    padding: 10px 70px;
+    position: relative;
+}
+.shared-board-options-side-panel {
+    background-color: #100f12;
+    border-radius: 20px;
+    z-index: 200 !important;
+    width: 300px;
+    height: 580px;
+    margin: auto;
+    margin-left: 10px;
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Poppins';
+    font-size: 18px;
+    padding: 10px 70px;
+    position: relative;
+}
+.shared-board-options-side-panel ul {
+    margin-top: 30px;
+}
+.shared-board-options-side-panel li {
+    font-size: 18px;
+    margin-top: 10px;
+    list-style-type: none;
+}
+.shared-board-options-side-panel .remove-member {
+    font-size: 20px;
+    opacity: 0.2;
+    position: absolute;
+    padding: 3px 20px;
+    margin-top: -5px;
+    right: 10px;
+    transition: 0.1s;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+}
+.shared-board-options-side-panel:hover .remove-member {
+    opacity: 0.4;
+}
+.shared-board-options-side-panel .remove-member:hover {
+    opacity: 0.9;
+}
+.join-code-container {
+    position: absolute;
+    bottom: 200px;
+    height: 40px;
+    width: 77%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.join-code {
+    font-size: 30px;
+    color: white;
+    width: 8rem;
+    line-height: 0.8rem;
+    margin-top: -30px;
+}
+.refresh-code-button {
+    cursor: pointer;
+    background-color: #353535;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-left: -20px;
+}
 
+.board-options-panel {
+    background-color: #100f12;
+    border-radius: 20px;
+    z-index: 200 !important;
+    width: 460px;
+    height: 580px;
+    margin: auto;
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Poppins';
+    font-size: 18px;
+    padding: 10px 70px;
+    position: relative;
+}
+.board-options-panel h1,
+.shared-board-options-panel h1,
+.shared-board-options-side-panel h1,
+.board-join-panel h1{
+    font-family: Poppins Semibold;
+    font-size: 28px;
+    margin-left: 0px;
+    position: relative;
+    top: 15px;
+}
+.board-options-panel label,
+.shared-board-options-panel label,
+.board-join-panel label {
+    display: block;
+    margin-top: 30px;
+}
+.board-options-save:hover,
+.board-options-delete:hover,
+.board-options-convert:hover {
+    font-size: 17px;
+}
+.board-options-input {
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 7px;
+    outline: none;
+    border: none;
+    transition: 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+.board-options-input:focus {
+    outline: none;
+    box-shadow: 0px 0px 12px 0 rgba(250, 250, 250, 0.6);
+    transition: 0.2s ease-in-out;
+}
+.name {
+    font-family: 'Poppins Semibold';
+    font-size: 17px;
+    padding: 20px 10px;
+    height: 1.5rem;
+}
+.desc {
+    font-family: Poppins;
+    height: 4rem;
+    font-size: 17px;
+    padding: 5px 10px;
+}
+.board-options-cancel {
+    display: block;
+    position: absolute;
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    right: 65px;
+    top: 48px;
+    opacity: 0.6;
+    transition: 0.1s;
+    cursor: pointer;
+}
+.board-options-cancel:hover {
+    opacity: 1;
+}
+.board-options-save {
+    display: block;
+    width: 100%;
+    border-radius: 7px;
+    padding: 10px;
+    font-family: 'Poppins';
+    font-size: 16px;
+    margin-top: 40px;
+    border: none;
+    background-color: #2a4a24;
+    color: white;
+    cursor: pointer;
+    transition: 0.1s;
+}
+.board-options-delete {
+    display: block;
+    width: 100%;
+    border-radius: 7px;
+    padding: 10px;
+    font-family: 'Poppins';
+    font-size: 16px;
+    margin-top: 20px;
+    border: none;
+    background-color: #7c1c1c;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.board-options-convert {
+    display: block;
+    width: 100%;
+    border-radius: 7px;
+    padding: 10px;
+    font-family: 'Poppins';
+    font-size: 16px;
+    margin-top: 40px;
+    border: none;
+    background-color: #353535;
+    color: white;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.board-join-panel {
+    background-color: #100f12;
+    border-radius: 20px;
+    z-index: 200 !important;
+    width: 460px;
+    height: 300px;
+    margin: auto;
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Poppins';
+    font-size: 18px;
+    padding: 10px 70px;
+    position: relative;
+}
+.board-code-input {
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 7px;
+    outline: none;
+    border: none;
+    transition: 0.2s ease-in-out;
+    box-sizing: border-box;
+    font-family: Poppins;
+    font-size: 24px;
+    padding: 10px;
+}
+.board-code-input:focus {
+    outline: none;
+    box-shadow: 0px 0px 12px 0 rgba(250, 250, 250, 0.6);
+    transition: 0.2s ease-in-out;
+}
 
 .sidebarNewBoard {
     z-index: 101;
     width: 100%;
     color: white;
-    opacity: 0.4;
+    opacity: 0.3;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -296,8 +576,8 @@ li:hover .sidebarDown {
     margin-left: 0px;
     box-sizing: border-box;
     font-family: Poppins;
-    font-size: 18px;
-    transition: font-size 0.02s ease-in-out;
+    font-size: 16px;
+    transition: 0.1s ease-in-out;
     border-radius: 2px;
     cursor: pointer;
 }
