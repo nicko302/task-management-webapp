@@ -9,7 +9,7 @@ namespace CRUD_Application.Models
         public string? Desc { get; set; } // TEXT
         public string CreatedAt { get; set; } // TEXT NOT NULL
         public string UpdatedAt { get; set; } // TEXT NOT NULL
-        public int? AdminId { get; set; } // INT
+        public string? AdminId { get; set; } // INT
         public int? JoinCode { get; set; } // INT
 
         public virtual ICollection<Models.List> Lists { get; set; } = new List<Models.List>();

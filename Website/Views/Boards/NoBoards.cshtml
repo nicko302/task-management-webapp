@@ -2,13 +2,26 @@
     ViewData["Title"] = "No Boards Found";
 }
 
-<div style="margin-top: 50px;">
+<div style="padding: 80px; font-family: Poppins; text-align: center;">
 
-    <h2>You don't have any boards yet!</h2>
-    <p class="text-muted">Create your first board to start organizing your tasks.</p>
-    
-    <button class="btn btn-primary" onclick="OpenCreateBoardModal()">
-        + Create My First Board
-    </button>
+    <span class="login-logo" style="margin-top: -30px;">☒</span>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h1>You don't have any boards yet!</h1>
+        <p style="font-size: 20px;">Create your first board to start organizing your tasks.</p>
+
+        <button class="login-button" onclick="NewBoard()">
+            + Create My First Board
+        </button>
+    }
+    else
+    {
+        <h1>You aren't logged in!</h1>
+        <p style="font-size: 20px;">Log in or register to begin your <b>asc</b>ent.</p>
+
+        <button class="login-button" onclick="toggleUserInfo()">
+            Open account panel
+        </button>
+    }
 
 </div>

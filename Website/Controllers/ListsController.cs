@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
+using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace CRUD_Application.Controllers
 {
@@ -193,7 +194,7 @@ namespace CRUD_Application.Controllers
         [Route("Lists/TransferList")]
         public async Task<IActionResult> TransferList([FromBody] TransferListDto data)
         {
-            var userId = 1; /////// REPLACE WHEN LOGIN WORKS
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////// REPLACE WHEN LOGIN WORKS
 
             var existingList = await _context.List.FindAsync(data.ListId);
             if (existingList == null) return NotFound($"List with ID {data.ListId} not found.");

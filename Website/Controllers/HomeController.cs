@@ -21,7 +21,7 @@ namespace CRUD_Application.Controllers
 
         public async Task<IActionResult> Index(int? id)
         {
-            var userId = 1; ///////// REMEMBER TO CHANGE WHEN LOGIN WORKS
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); ///////// REMEMBER TO CHANGE WHEN LOGIN WORKS
             var boardBelongsToUser = false;
 
             // fetch the first board belonging to the user
@@ -39,7 +39,7 @@ namespace CRUD_Application.Controllers
             // redirect if the user does not have a board
             if (firstBoard == null)
             {
-                return RedirectToAction("NoBoards");
+                return RedirectToAction("NoBoards", "Boards");
             }
             // redirect if no id is present in the URL
             if (id == null || id == 0)

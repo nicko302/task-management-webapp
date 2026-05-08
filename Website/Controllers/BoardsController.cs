@@ -1,23 +1,27 @@
 ﻿using CRUD_Application.Data;
 using CRUD_Application.Models;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Runtime.Intrinsics.Arm;
+using System.Security.Claims;
 
 namespace CRUD_Application.Controllers
 {
     public class BoardsController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        public BoardsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly ApplicationDbContext _context;
+		public BoardsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+		{
+			_context = context;
+			_userManager = userManager;
+		}
 
-        // display this page if the user has no boards
-        public IActionResult NoBoards()
+		// display this page if the user has no boards
+		public IActionResult NoBoards()
         {
             return View();
         }
@@ -27,7 +31,7 @@ namespace CRUD_Application.Controllers
         [HttpGet("/Boards/Index/{id?}")]
         public async Task<IActionResult> Index(int? id)
         {
-            var userId = 1; ///////// REMEMBER TO CHANGE WHEN LOGIN WORKS
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); ///////// REMEMBER TO CHANGE WHEN LOGIN WORKS
 
             // return the data from the first board belonging to the user
             var firstBoard = await _context.UserHasBoard
@@ -47,8 +51,8 @@ namespace CRUD_Application.Controllers
             // if the user has NO boards
             if (boardsOfUser.Count == 0)
             {
-                return RedirectToAction("NoBoards");
-            }
+				return RedirectToAction("NoBoards", "Boards");
+			}
 
             // if the entered id is null, 0, or not their board
             else if (!id.HasValue || id == 0 || !boardsOfUser.Contains((int)id))
@@ -67,8 +71,8 @@ namespace CRUD_Application.Controllers
 
             if (board == null)
             {
-                return RedirectToAction("NoBoards");
-            }
+				return RedirectToAction("NoBoards", "Boards");
+			}
 
             // if a valid ID is present in the URL, successfully display the board
             return View("Index", board);
@@ -81,7 +85,7 @@ namespace CRUD_Application.Controllers
         [Route("Boards/CreateBoard")]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto data)
         {
-            var userId = 1; /////////////// MAKE SURE TO CHANGE THIS TO USE ACTUAL USERID
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////////////// MAKE SURE TO CHANGE THIS TO USE ACTUAL USERID
 
             var newBoard = new Models.Board
             { };
@@ -234,7 +238,7 @@ namespace CRUD_Application.Controllers
         [Route("Boards/DeleteBoard")]
         public async Task<IActionResult> DeleteBoard([FromBody] DeleteBoardDto data)
         {
-            var userId = 1; /////////////// replace with actual user ID retrieval logic
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////////////// replace with actual user ID retrieval logic
 
             // fetch the board (Board and UserHasBoard entry) to be deleted
             var deletedBoard = await _context.UserHasBoard
@@ -282,7 +286,7 @@ namespace CRUD_Application.Controllers
         [Route("Boards/MoveBoard")]
         public async Task<IActionResult> MoveBoard([FromBody] MoveBoardDto data)
         {
-            var userId = 1; /////////////// replace with actual user ID retrieval logic
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////////////// replace with actual user ID retrieval logic
 
 
             // find the board to be moved
@@ -369,7 +373,7 @@ namespace CRUD_Application.Controllers
 
             var memberNames = await _context.UserHasBoard
                .Where(u => u.BoardId == data.BoardId)
-               .Select(u => u.User.Username)
+               .Select(u => u.User.UserName)
                .ToListAsync();
 
             var groupAdminID = await _context.UserHasBoard
@@ -378,7 +382,7 @@ namespace CRUD_Application.Controllers
                .FirstOrDefaultAsync();
             var groupAdminName = await _context.UserHasBoard
                .Where(u => u.UserId == groupAdminID)
-               .Select(u => u.User.Username)
+               .Select(u => u.User.UserName)
                .FirstOrDefaultAsync();
 
             return Ok( new { members = memberNames, admin = groupAdminName, user = userName });
@@ -395,7 +399,7 @@ namespace CRUD_Application.Controllers
         [Route("Boards/ConvertBoard")]
         public async Task<IActionResult> ConvertBoard([FromBody] ConvertBoardDto data)
         {
-            var userId = 1; ////////////// replace when user login system works
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); ////////////// replace when user login system works
 
 
             // retrieve the user board connection
@@ -434,10 +438,10 @@ namespace CRUD_Application.Controllers
         [Route("Boards/RemoveMember")]
         public async Task<IActionResult> RemoveMember([FromBody] RemoveMemberDTO data)
         {
-            var userId = 1; /////////// CHANGE WHEN LOGIN LOGIC WORKS
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////////// CHANGE WHEN LOGIN LOGIC WORKS
 
             // retrieve the user and board connection
-            var user = await _context.User.FirstOrDefaultAsync(u => u.Username == data.MemberName);
+            var user = await _userManager.FindByNameAsync(data.MemberName);
             var userHasBoard = await _context.UserHasBoard
                 .FirstOrDefaultAsync(uhb => uhb.UserId == user.Id && uhb.BoardId == data.BoardId);
             if (userHasBoard == null) { return NotFound("Member is not on this board");  }
@@ -467,7 +471,7 @@ namespace CRUD_Application.Controllers
         [Route("Boards/UserJoinBoard")]
         public async Task<IActionResult> UserJoinBoard([FromBody] UserJoinBoardDto data)
         {
-            var userId = 1; /////////////// REPLACE WHEN LOGIN SYSTEM WORKS
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////////////// REPLACE WHEN LOGIN SYSTEM WORKS
 
             // check if a board exists with that code
             var boardWithCode = await _context.Board
@@ -517,7 +521,7 @@ namespace CRUD_Application.Controllers
         [Route("Boards/GetUserBoards")]
         public async Task<IActionResult> GetUserBoards()
         {
-            var userId = 1; /////////////// REPLACE WHEN LOGIN SYSTEM WORKS
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); /////////////// REPLACE WHEN LOGIN SYSTEM WORKS
 
             // return all boards belonging to the current user
             var boardsOfUser = await _context.UserHasBoard

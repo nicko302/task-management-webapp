@@ -13,7 +13,10 @@ else
 	ViewData["BoardName"] = Model.Name;
 	ViewData["BoardDesc"] = Model.Desc;
 
-	<div class="lists-row" data-board-id="@Model.Id">
+
+	// --------------- lists view
+
+	<div class="lists-row" id="lists-view" data-board-id="@Model.Id">
 
 		@foreach (var list in Model.Lists)
 		{
@@ -85,5 +88,45 @@ else
 
 		<span class="new-list" title="New list" onclick="NewList(this)" data-board-id="@Model.Id."><b>+</b></span>
 
+	</div>
+
+
+	// --------------- page view
+
+	<div class="page-column view-hidden" id="page-view" data-board-id="@Model.Id">
+		@foreach (var list in Model.Lists)
+		{
+			<div class="list-page" data-colour-hex="@list.HexColour" data-colour-text="@list.Colour">
+
+				<span class="list-name-pg" id="@list.Id" >@list.Name</span>
+
+				<ul id="@list.Id" class="task-ul">
+					@foreach (var task in list.Tasks)
+					{
+						@* display tasks in the list *@
+						<li style="list-style: none; position: relative;" id="@list.Id" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, 'down')" id="@task.Id">⏷</span>
+							<span class="up" onclick="MoveTask(this, 'up')" id="@task.Id">⏶</span>
+
+							<label class="container @(task.Completed == 1 ? "completed-task" : "task")" id="label_@task.Id" data-task-pos=@task.Position>
+								@task.Content
+								<input type="checkbox"
+									   data-task-id="@task.Id"
+									   onchange="toggleCheckbox(this)"
+									   class="task-checkbox"
+								@(task.Completed == 1 ? "checked" : "")> @* checks in database if task has been completed *@
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="@task.Id">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="@task.Id" data-task-pos=@task.Position>✕</span>
+							</div>
+						</li>
+					}
+				</ul>
+			</div>
+		}
 	</div>
 }

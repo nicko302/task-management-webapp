@@ -1,4 +1,5 @@
 ﻿@using Microsoft.EntityFrameworkCore
+@using System.Security.Claims
 @inject CRUD_Application.Data.ApplicationDbContext _context
 
 <!DOCTYPE html>
@@ -6,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CRUD_Application</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
@@ -15,132 +16,187 @@
         <hr class="headerLine">
 
         <nav>
+            
+            
             @* ------- header bar *@
-            <div class="headerBar">
-                <div class="headerTitle" onclick="EditBoardName(this)" id="@Model.Id"><h1>@ViewData["BoardName"]</h1></div>
-                <div class="headerDot">•</div>
-                <div class="headerDesc" onclick="EditBoardDesc(this)" id="@Model.Id">@ViewData["BoardDesc"]</div>
-                <div class="headerBoardInfo" id="@Model.Id">
-                    i
-                    <div class="boardInfo">
-                        <p><b>Created:</b><br /> @Model.CreatedAt <br /></p>
-                        <p style="margin-top: -5px;"><b>Last updated:</b><br /> @Model.UpdatedAt</p>
+			<div class="headerBar">
+				@* display the full header when logged in *@
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (Model != null && ViewData["BoardName"] != null)
+                    {
+                        <div class="headerTitle" onclick="EditBoardName(this)" id="@Model.Id"><h1>@ViewData["BoardName"]</h1></div>
+                        <div class="headerDot">•</div>
+                        <div class="headerDesc" onclick="EditBoardDesc(this)" id="@Model.Id">@ViewData["BoardDesc"]</div>
+                        // check if the board is a shared board
+                        @if (Model.AdminId != null)
+                        {
+                            <div class="headerBoardInfo shared" id="@Model.Id" onclick="OpenBoardOptionsBuffer(this, @Model.Id, `@Model.Name`, `@Model.Desc`)">
+                                i
+                                <div class="boardInfo">
+                                    <p><b>Created:</b><br /> @Model.CreatedAt <br /></p>
+                                    <p style="margin-top: -5px;"><b>Last updated:</b><br /> @Model.UpdatedAt</p>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="headerBoardInfo" id="@Model.Id" onclick="OpenBoardOptionsBuffer(this, @Model.Id, `@Model.Name`, `@Model.Desc`)">
+                                i
+                                <div class="boardInfo">
+                                    <p><b>Created:</b><br /> @Model.CreatedAt <br /></p>
+                                    <p style="margin-top: -5px;"><b>Last updated:</b><br /> @Model.UpdatedAt</p>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="headerDelete" title="Delete" onclick="DeleteBoard(this)" id="@Model.Id"><b>🗑</b></div>
+                    }
+                    else
+                    {
+                        <div class="headerTitleNoUser">
+                            <h1 style="margin-left: 0px; font-size: 30px;">☑︎ &nbsptAsc</h1>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="headerTitleNoUser">
+                        <h1 style="font-size: 30px;">☑︎ &nbsptAsc</h1>
+                    </div>
+				}
+
+                @if (Model != null && ViewData["BoardName"] != null)
+                {
+                    <div class="list-view-button" title="Toggle view" onclick="TogglePageView()">
+                        <svg fill="#ffffff" height="30px" width="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#ffffff">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M490.667,0H21.333C9.557,0,0,9.557,0,21.333v469.333C0,502.443,9.557,512,21.333,512h469.333 c11.776,0,21.333-9.557,21.333-21.333V21.333C512,9.557,502.443,0,490.667,0z M128,426.667c-23.573,0-42.667-19.093-42.667-42.667 c0-23.573,19.093-42.667,42.667-42.667c23.573,0,42.667,19.093,42.667,42.667C170.667,407.573,151.573,426.667,128,426.667z M128,298.667c-23.573,0-42.667-19.093-42.667-42.667s19.093-42.667,42.667-42.667c23.573,0,42.667,19.093,42.667,42.667 S151.573,298.667,128,298.667z M128,170.667c-23.573,0-42.667-19.093-42.667-42.667c0-23.573,19.093-42.667,42.667-42.667 c23.573,0,42.667,19.093,42.667,42.667C170.667,151.573,151.573,170.667,128,170.667z M405.333,405.333H234.667 c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333h170.667c11.776,0,21.333,9.557,21.333,21.333 S417.109,405.333,405.333,405.333z M405.333,277.333H234.667c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333 h170.667c11.776,0,21.333,9.557,21.333,21.333S417.109,277.333,405.333,277.333z M405.333,149.333H234.667 c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333h170.667c11.776,0,21.333,9.557,21.333,21.333 S417.109,149.333,405.333,149.333z"></path> </g> </g> </g>
+                        </svg>
+                    </div>
+                }
+
+                <div class="headerUser">
+                    <div class="userIcon" title="Account" onclick="toggleUserInfo()">
+                        <svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#ffffff"></path>
+                                <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#ffffff"></path>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="userInfo userHidden" id="user-info">
+                        <partial name="_LoginPartial" />
                     </div>
                 </div>
-                <div class="headerDelete" title="Delete" onclick="DeleteBoard(this)" id="@Model.Id"><b>🗑</b></div>
-
-                <div class="userIcon">
-                    <svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#ffffff"></path>
-                            <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#ffffff"></path>
-                        </g>
-                    </svg>
-                </div>
-
+                    
             </div>
-                
+              
             @* ------- side bar *@
-            <button class="sidebarToggle" onclick="toggleSidebar()">☰</button>
-            <div class="overlay" id="overlay">
-                <div class="sidebar sidebarHidden" id="sidebar">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button class="sidebarToggle" onclick="toggleSidebar()">☰</button>
+                <div class="overlay" id="overlay">
+                    <div class="sidebar sidebarHidden" id="sidebar">
                 
-                    <button class="closeSidebar" onclick="toggleSidebar()">«</button>
-                    <li class="sidebarTitle">
-                        <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
-                    </li>
+                        <button class="closeSidebar" onclick="toggleSidebar()">«</button>
+                        <li class="sidebarTitle">
+                            <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
+                        </li>
 
-                    <ul class="user-boards-list">
-                        @*----- display all boards in the sidebar, belonging to the current user*@
-                        @{
-						    var userId = 1; /////////////// replace with actual user ID retrieval logic
+                        <ul class="user-boards-list">
+                            @*----- display all boards in the sidebar, belonging to the current user*@
+                            @{
+						        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-						    // fetch boards belonging to the current user
-                            var boardsOfUser = _context.UserHasBoard
-                               .Include(uhb => uhb.Board)
-                               .Where(uhb => uhb.UserId == userId && uhb.Board.AdminId == null)
-                               .OrderBy(uhb => uhb.Position)
-                               .ToList();
+						        // fetch boards belonging to the current user
+                                var boardsOfUser = _context.UserHasBoard
+                                    .Include(uhb => uhb.Board)
+                                    .Where(uhb => uhb.UserId == userId && uhb.Board.AdminId == null)
+                                    .OrderBy(uhb => uhb.Position)
+                                    .ToList();
                     
-                            foreach (var board in boardsOfUser)
-                            {
-                                <li>
-                                    <a class="sidebarButton my-board-button"
-                                        data-board-id="@board.BoardId"
-                                        asp-controller="Boards"
-                                        asp-action="Index"
-                                        asp-route-id="@board.BoardId">
-                                        @board.Board.Name
-                                    </a>
+                                foreach (var board in boardsOfUser)
+                                {
+                                    <li>
+                                        <a class="sidebarButton my-board-button"
+                                            data-board-id="@board.BoardId"
+                                            asp-controller="Boards"
+                                            asp-action="Index"
+                                            asp-route-id="@board.BoardId">
+                                            @board.Board.Name
+                                        </a>
 
-                                    <span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, @board.BoardId, `@board.Board.Name`, `@board.Board.Desc`)"><b>&nbsp⋮&nbsp&nbsp</b></span>
-                                    <div class="sidebarUpDownDiv">
-                                        <span class="sidebarUp" onclick="MoveBoard(@board.BoardId, 'up')">⏶</span>
-                                        <span class="sidebarDown" onclick="MoveBoard(@board.BoardId, 'down')">⏷</span>
-                                    </div>
-                                </li>
+                                        <span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, @board.BoardId, `@board.Board.Name`, `@board.Board.Desc`)"><b>&nbsp⋮&nbsp&nbsp</b></span>
+                                        <div class="sidebarUpDownDiv">
+                                            <span class="sidebarUp" onclick="MoveBoard(@board.BoardId, 'up')">⏶</span>
+                                            <span class="sidebarDown" onclick="MoveBoard(@board.BoardId, 'down')">⏷</span>
+                                        </div>
+                                    </li>
+                                }
                             }
-                        }
-                    </ul>
+                        </ul>
                     
-                    <li>
-                        <span class="sidebarNewBoard" onclick="NewBoard(this)">
-                            <b>+</b> &nbspNew board
-                        </span>
-                    </li>
+                        <li>
+                            <span class="sidebarNewBoard" onclick="NewBoard()">
+                                <b>+</b> &nbspNew board
+                            </span>
+                        </li>
                     
-                    <br />
-                    <hr class="sidebarLine">
-                    <li class="sidebarTitle">
-                        <br>
-                        <p style="margin-top: -10px; margin-bottom: 15px;">Shared boards</p>
-                    </li>
+                        <br />
+                        <hr class="sidebarLine">
+                        <li class="sidebarTitle">
+                            <br>
+                            <p style="margin-top: -10px; margin-bottom: 15px;">Shared boards</p>
+                        </li>
 
-                    <ul class="shared-boards-list">
-                        @*----- display all shared boards in the sidebar that the user is part of*@
-                        @{
-                            // fetch boards belonging to the current user
-                            var sharedBoardsOfUser = _context.UserHasBoard
-                               .Include(uhb => uhb.Board)
-                               .Where(uhb => uhb.UserId == userId && uhb.Board.AdminId != null)
-                               .OrderBy(uhb => uhb.Position)
-                               .ToList();
+                        <ul class="shared-boards-list">
+                            @*----- display all shared boards in the sidebar that the user is part of*@
+                            @{
+                                // fetch boards belonging to the current user
+                                var sharedBoardsOfUser = _context.UserHasBoard
+                                    .Include(uhb => uhb.Board)
+                                    .Where(uhb => uhb.UserId == userId && uhb.Board.AdminId != null)
+                                    .OrderBy(uhb => uhb.Position)
+                                    .ToList();
                     
-                            foreach (var uhb in sharedBoardsOfUser)
-                            {
-                                <li>
-                                    <a class="sidebarButton shared-board-button"
-                                           data-board-id="@uhb.BoardId"
-                                           asp-controller="Boards"
-                                           asp-action="Index"
-                                           asp-route-id="@uhb.BoardId">
-                                        @uhb.Board.Name
-                                    </a>
+                                foreach (var uhb in sharedBoardsOfUser)
+                                {
+                                    <li>
+                                        <a class="sidebarButton shared-board-button"
+                                                data-board-id="@uhb.BoardId"
+                                                asp-controller="Boards"
+                                                asp-action="Index"
+                                                asp-route-id="@uhb.BoardId">
+                                            @uhb.Board.Name
+                                        </a>
 
-                                    <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, @uhb.BoardId, `@uhb.Board.Name`, `@uhb.Board.Desc`)"><b>&nbsp⋮&nbsp&nbsp</b></span>
-                                    <div class="sidebarUpDownDiv">
-                                        <span class="sidebarUp" onclick="MoveBoard(@uhb.BoardId, 'up')">⏶</span>
-                                        <span class="sidebarDown" onclick="MoveBoard(@uhb.BoardId, 'down')">⏷</span>
-                                    </div>
-                                </li>
+                                        <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, @uhb.BoardId, `@uhb.Board.Name`, `@uhb.Board.Desc`)"><b>&nbsp⋮&nbsp&nbsp</b></span>
+                                        <div class="sidebarUpDownDiv">
+                                            <span class="sidebarUp" onclick="MoveBoard(@uhb.BoardId, 'up')">⏶</span>
+                                            <span class="sidebarDown" onclick="MoveBoard(@uhb.BoardId, 'down')">⏷</span>
+                                        </div>
+                                    </li>
+                                }
                             }
-                        }
-                    </ul>
-                    <li>
-                        <span class="sidebarNewBoard" onclick="JoinSharedBoard(this)">
-                            <b>➥</b> &nbspJoin board
-                        </span>
-                    </li>
-                    <li>
-                        <span class="sidebarNewBoard" onclick="NewSharedBoard(this)">
-                            <b>+</b> &nbspNew board
-                        </span>
-                    </li>
+                        </ul>
+                        <li>
+                            <span class="sidebarNewBoard" onclick="JoinSharedBoard(this)">
+                                <b>➥</b> &nbspJoin board
+                            </span>
+                        </li>
+                        <li>
+                            <span class="sidebarNewBoard" onclick="NewSharedBoard(this)">
+                                <b>+</b> &nbspNew board
+                            </span>
+                        </li>
 
+                    </div>
                 </div>
-            </div>
+            }
         </nav>
 
     </header>
