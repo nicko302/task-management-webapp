@@ -6,6 +6,21 @@
 	sidebar.classList.toggle('sidebarHidden');
 }
 
+function toggleUserInfo() {
+	const userInfo = document.getElementById("user-info");
+	userInfo.classList.toggle('userHidden');
+}
+
+
+function TogglePageView() {
+	const listsView = document.getElementById("lists-view");
+	const pageView = document.getElementById("page-view");
+
+	listsView.classList.toggle("view-hidden");
+    pageView.classList.toggle("view-hidden");
+}
+
+
 function toggleCheckbox(element) {
 	const taskId = element.getAttribute('data-task-id');
 	const label = document.getElementById('label_' + taskId);
@@ -664,7 +679,7 @@ function MoveList(buttonElement, direction) {
 
 
 
-function NewBoard(buttonElement) {
+function NewBoard() {
 
 	const allBoards = document.querySelectorAll(".my-board-button")
 	const newBoardPos = allBoards.length + 1; // calculate the position for the new 
@@ -855,7 +870,10 @@ function MoveBoard(boardId, direction) {
 		});
 }
 
-
+function OpenBoardOptionsBuffer(buttonElement, boardId, boardName, boardDesc) {
+	toggleSidebar();
+	OpenBoardOptions(buttonElement, boardId, boardName, boardDesc)
+}
 function OpenBoardOptions(buttonElement, boardId, boardName, boardDesc) {
 	toggleSidebar();
 	const overlay = document.getElementById("overlay");
