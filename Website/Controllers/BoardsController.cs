@@ -367,9 +367,13 @@ namespace CRUD_Application.Controllers
         [Route("Boards/GetBoardMembers")]
         public async Task<IActionResult> GetBoardMembers([FromBody] GetBoardMembersDto data)
         {
-            var userName = "nick"; ////////////// replace when user login system works
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = await _context.Users
+			   .Where(u => u.Id == userId)
+			   .Select(u => u.UserName)
+			   .FirstOrDefaultAsync();
 
-            var board = await _context.Board.FindAsync(data.BoardId);
+			var board = await _context.Board.FindAsync(data.BoardId);
 
             var memberNames = await _context.UserHasBoard
                .Where(u => u.BoardId == data.BoardId)
