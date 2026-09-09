@@ -51,9 +51,12 @@
 								Hello nick!
 							</li>
 							<li class="nav-item">
+								<a class="navLogoutButton" href="../index.html">Logout</a>
+								<!--
 								<form id="logoutForm" class="form-inline" action="../index.html" method="post">
-									<button id="logout" type="submit" class="navLogoutButton">Logout</button>
+								<button id="logout" type="submit" class="navLogoutButton">Logout</button>
 								<input name="__RequestVerificationToken" type="hidden" value="CfDJ8CZBuV_YFdtJg65vu_mUq0hBvH9YjENK41gxeqBuOWZGWAW4MeRNo64Y2eFkbmc0gYkGlIokvTVTsoAABw6Evzbc4dv2wMYQbZcRi69BYKXtvw8wBV9uSiVFib4mqDOEG9yFjoKOcCPG7ChVIGP7--4Ox9xaAHkcH7obDnV_yi38AlBV5JLRkiaYOZ29GQKRDw"></form>
+								-->
 							</li>
 						</ul>
                     </div>
@@ -110,17 +113,17 @@
                         </li>
 
                         <ul class="shared-boards-list">
-                                    <li>
-                                        <a class="sidebarButton shared-board-button" data-board-id="6" href="Group Project.html">
-                                            Group project
-                                        </a>
+                            <li>
+                                <a class="sidebarButton shared-board-button" data-board-id="6" href="../webpages/Group Project.html">
+                                    Group project
+                                </a>
 
-                                        <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, 6, `Group project`, `Tasks for our group project`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
-                                        <div class="sidebarUpDownDiv">
-                                            <span class="sidebarUp" onclick="MoveBoard(6, &#39;up&#39;)">⏶</span>
-                                            <span class="sidebarDown" onclick="MoveBoard(6, &#39;down&#39;)">⏷</span>
-                                        </div>
-                                    </li>
+                                <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, 6, `Group project`, `Tasks for our group project`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+                                <div class="sidebarUpDownDiv">
+                                    <span class="sidebarUp" onclick="MoveBoard(6, &#39;up&#39;)">⏶</span>
+                                    <span class="sidebarDown" onclick="MoveBoard(6, &#39;down&#39;)">⏷</span>
+                                </div>
+                            </li>
                         </ul>
                         <li>
                             <span class="sidebarNewBoard" onclick="JoinSharedBoard(this)">
