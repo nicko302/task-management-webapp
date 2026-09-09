@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>to-do</title>
+    <link rel="stylesheet" href="../site.css">
+    <script src="../site.js"></script>
+</head>
+
+<body>
+    <header>
+        <hr class="headerLine">
+
+        <nav>
+
+
+            <div class="headerBar">
+                <div class="headerTitle" onclick="EditBoardName(this)" id="37"><h1>Shared Board #2</h1></div>
+                <div class="headerDot">•</div>
+                <div class="headerDesc" onclick="EditBoardDesc(this)" id="37">No description</div>
+                <div class="headerBoardInfo shared" id="37" onclick="OpenBoardOptionsBuffer(this, 37, `Shared Board #2`, `No description`)">
+                    i
+                    <div class="boardInfo">
+                        <p><b>Created:</b><br> 2026-09-09 <br></p>
+                        <p style="margin-top: -5px;"><b>Last updated:</b><br> 2026-09-09</p>
+                    </div>
+                </div>
+                <div class="headerDelete" title="Delete" onclick="DeleteBoard(this)" id="37"><b>🗑</b></div>
+
+                <div class="list-view-button" title="Toggle view" onclick="TogglePageView()">
+                    <svg fill="#ffffff" height="30px" width="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#ffffff">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M490.667,0H21.333C9.557,0,0,9.557,0,21.333v469.333C0,502.443,9.557,512,21.333,512h469.333 c11.776,0,21.333-9.557,21.333-21.333V21.333C512,9.557,502.443,0,490.667,0z M128,426.667c-23.573,0-42.667-19.093-42.667-42.667 c0-23.573,19.093-42.667,42.667-42.667c23.573,0,42.667,19.093,42.667,42.667C170.667,407.573,151.573,426.667,128,426.667z M128,298.667c-23.573,0-42.667-19.093-42.667-42.667s19.093-42.667,42.667-42.667c23.573,0,42.667,19.093,42.667,42.667 S151.573,298.667,128,298.667z M128,170.667c-23.573,0-42.667-19.093-42.667-42.667c0-23.573,19.093-42.667,42.667-42.667 c23.573,0,42.667,19.093,42.667,42.667C170.667,151.573,151.573,170.667,128,170.667z M405.333,405.333H234.667 c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333h170.667c11.776,0,21.333,9.557,21.333,21.333 S417.109,405.333,405.333,405.333z M405.333,277.333H234.667c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333 h170.667c11.776,0,21.333,9.557,21.333,21.333S417.109,277.333,405.333,277.333z M405.333,149.333H234.667 c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333h170.667c11.776,0,21.333,9.557,21.333,21.333 S417.109,149.333,405.333,149.333z"></path> </g> </g> </g>
+                        </svg>
+                </div>
+
+                <div class="headerUser">
+                    <div class="userIcon" title="Account" onclick="toggleUserInfo()">
+                        <svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#ffffff"></path>
+                                <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#ffffff"></path>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="userInfo userHidden" id="user-info">
+
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                Hello nick!
+                            </li>
+                            <li class="nav-item">
+                                <form id="logoutForm" class="form-inline" action="index.html" method="post">
+                                    <button id="logout" type="submit" class="navLogoutButton">Logout</button>
+                                    <input name="__RequestVerificationToken" type="hidden" value="CfDJ8CZBuV_YFdtJg65vu_mUq0iOT7XcKFFutOdYZ-b2ZGS1aP-EqzH4BgwlVdxwUXoTnOP2mDmfX6M0Ag1ZHStr_SzgOQKPtp7DTdb7s5S92pO04FTuo38hePF7u_e2jMHne3AlKcqR4WahO6uGwMdoxqKdvtBVmAsPSxZ8dSov_Xgzu6n3jwVOrEvLid0zNnCZig">
+                                </form>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="sidebarToggle" onclick="toggleSidebar()">☰</button>
+            <div class="overlay" id="overlay">
+                <div class="sidebar sidebarHidden" id="sidebar">
+
+                    <button class="closeSidebar" onclick="toggleSidebar()">«</button>
+                    <li class="sidebarTitle">
+                        <p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
+                    </li>
+
+                    <ul class="user-boards-list">
+                        <li>
+                            <a class="sidebarButton my-board-button" data-board-id="29" href="to-do.html">
+                                to-do
+                            </a>
+
+                            <span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, 29, `to-do`, `things i need to do!!!!`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+                            <div class="sidebarUpDownDiv">
+                                <span class="sidebarUp" onclick="MoveBoard(29, &#39;up&#39;, this)">⏶</span>
+                                <span class="sidebarDown" onclick="MoveBoard(29, &#39;down&#39;, this)">⏷</span>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="sidebarButton my-board-button" data-board-id="33" href="Personal.html">
+                                personal
+                            </a>
+
+                            <span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, 33, `personal`, `personal tasks and goals`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+                            <div class="sidebarUpDownDiv">
+                                <span class="sidebarUp" onclick="MoveBoard(33, &#39;up&#39;, this)">⏶</span>
+                                <span class="sidebarDown" onclick="MoveBoard(33, &#39;down&#39;, this)">⏷</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <li>
+                        <a class="sidebarNewBoard" href="My Board 3.html">
+                            <b>+</b> &nbsp;New board
+                        </a>
+                    </li>
+
+                    <br>
+                    <hr class="sidebarLine">
+                    <li class="sidebarTitle">
+                        <br>
+                        <p style="margin-top: -10px; margin-bottom: 15px;">Shared boards</p>
+                    </li>
+
+                    <ul class="shared-boards-list">
+                        <li>
+                            <a class="sidebarButton shared-board-button" data-board-id="6" href="Group Project.html">
+                                Group project
+                            </a>
+
+                            <span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, 6, `Group project`, `Tasks for our group project`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+                            <div class="sidebarUpDownDiv">
+                                <span class="sidebarUp" onclick="MoveBoard(6, &#39;up&#39;)">⏶</span>
+                                <span class="sidebarDown" onclick="MoveBoard(6, &#39;down&#39;)">⏷</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <li>
+                        <span class="sidebarNewBoard" onclick="JoinSharedBoard(this)">
+                            <b>➥</b> &nbsp;Join board
+                        </span>
+                    </li>
+                    <li>
+                        <a class="sidebarNewBoard" href="Shared Board 2.html">
+                            <b>+</b> &nbsp;New board
+                        </a>
+                    </li>
+
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
+    <div class="main">
+        <main role="main">
+
+            <div class="lists-row" id="lists-view" data-board-id="37">
+
+
+                <span class="new-list" title="New list" onclick="NewList(this)" data-board-id="37."><b>+</b></span>
+
+            </div>
+            <div class="page-column view-hidden" id="page-view" data-board-id="37">
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

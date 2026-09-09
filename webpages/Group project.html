@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>to-do</title>
+	<link rel="stylesheet" href="../site.css">
+	<script src="../site.js"></script>
+</head>
+
+<body>
+	<header>
+		<hr class="headerLine">
+
+		<nav>
+
+
+			<div class="headerBar">
+				<div class="headerTitle" onclick="EditBoardName(this)" id="6"><h1>Group project</h1></div>
+				<div class="headerDot">•</div>
+				<div class="headerDesc" onclick="EditBoardDesc(this)" id="6">Tasks for our group project</div>
+				<div class="headerBoardInfo shared" id="6" onclick="OpenBoardOptionsBuffer(this, 6, `Group project`, `Tasks for our group project`)">
+					i
+					<div class="boardInfo">
+						<p><b>Created:</b><br> 2026-05-07 <br></p>
+						<p style="margin-top: -5px;"><b>Last updated:</b><br> 2026-09-09</p>
+					</div>
+				</div>
+				<div class="headerDelete" title="Delete" onclick="DeleteBoard(this)" id="6"><b>🗑</b></div>
+
+				<div class="list-view-button" title="Toggle view" onclick="TogglePageView()">
+					<svg fill="#ffffff" height="30px" width="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#ffffff">
+					<g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+					<g id="SVGRepo_iconCarrier"> <g> <g> <path d="M490.667,0H21.333C9.557,0,0,9.557,0,21.333v469.333C0,502.443,9.557,512,21.333,512h469.333 c11.776,0,21.333-9.557,21.333-21.333V21.333C512,9.557,502.443,0,490.667,0z M128,426.667c-23.573,0-42.667-19.093-42.667-42.667 c0-23.573,19.093-42.667,42.667-42.667c23.573,0,42.667,19.093,42.667,42.667C170.667,407.573,151.573,426.667,128,426.667z M128,298.667c-23.573,0-42.667-19.093-42.667-42.667s19.093-42.667,42.667-42.667c23.573,0,42.667,19.093,42.667,42.667 S151.573,298.667,128,298.667z M128,170.667c-23.573,0-42.667-19.093-42.667-42.667c0-23.573,19.093-42.667,42.667-42.667 c23.573,0,42.667,19.093,42.667,42.667C170.667,151.573,151.573,170.667,128,170.667z M405.333,405.333H234.667 c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333h170.667c11.776,0,21.333,9.557,21.333,21.333 S417.109,405.333,405.333,405.333z M405.333,277.333H234.667c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333 h170.667c11.776,0,21.333,9.557,21.333,21.333S417.109,277.333,405.333,277.333z M405.333,149.333H234.667 c-11.776,0-21.333-9.557-21.333-21.333s9.557-21.333,21.333-21.333h170.667c11.776,0,21.333,9.557,21.333,21.333 S417.109,149.333,405.333,149.333z"></path> </g> </g> </g>
+                        </svg>
+				</div>
+
+				<div class="headerUser">
+					<div class="userIcon" title="Account" onclick="toggleUserInfo()">
+						<svg width="34px" height="34px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+							<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+							<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+							<g id="SVGRepo_iconCarrier">
+								<path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#ffffff"></path>
+								<path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#ffffff"></path>
+							</g>
+						</svg>
+					</div>
+
+					<div class="userInfo userHidden" id="user-info">
+
+
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								Hello nick!
+							</li>
+							<li class="nav-item">
+								<form id="logoutForm" class="form-inline" action="index.html" method="post">
+									<button id="logout" type="submit" class="navLogoutButton">Logout</button>
+									<input name="__RequestVerificationToken" type="hidden" value="CfDJ8CZBuV_YFdtJg65vu_mUq0iG-trQhLSDL1sF5ardwlapOaqnWawv5BmvRDm_U6S9sAG06iP-nsB4aAd-sVZzqiI-K0GcRdKSdiPmIFoT0AOHfPu4BDsP7wvnclqHMEoE6ALLjsWkCX-6OOoRrxO3oxVvET-h2U7lzJQIsoczwYSztWwtncHbkUP5nHhN4z28Ng">
+								</form>
+							</li>
+						</ul>
+
+					</div>
+				</div>
+
+			</div>
+
+			<button class="sidebarToggle" onclick="toggleSidebar()">☰</button>
+			<div class="overlay" id="overlay">
+				<div class="sidebar sidebarHidden" id="sidebar">
+
+					<button class="closeSidebar" onclick="toggleSidebar()">«</button>
+					<li class="sidebarTitle">
+						<p style="margin-top: 16px; margin-bottom: 15px;">My boards</p>
+					</li>
+
+					<ul class="user-boards-list">
+						<li>
+							<a class="sidebarButton my-board-button" data-board-id="29" href="to-do.html">
+								to-do
+							</a>
+
+							<span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, 29, `to-do`, `things i need to do!!!!`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+							<div class="sidebarUpDownDiv">
+								<span class="sidebarUp" onclick="MoveBoard(29, &#39;up&#39;, this)">⏶</span>
+								<span class="sidebarDown" onclick="MoveBoard(29, &#39;down&#39;, this)">⏷</span>
+							</div>
+						</li>
+						<li>
+							<a class="sidebarButton my-board-button" data-board-id="33" href="Personal.html">
+								personal
+							</a>
+
+							<span class="sidebarBoardOptions" title="Options" onclick="OpenBoardOptions(this, 33, `personal`, `personal tasks and goals`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+							<div class="sidebarUpDownDiv">
+								<span class="sidebarUp" onclick="MoveBoard(33, &#39;up&#39;, this)">⏶</span>
+								<span class="sidebarDown" onclick="MoveBoard(33, &#39;down&#39;, this)">⏷</span>
+							</div>
+						</li>
+					</ul>
+
+					<li>
+						<a class="sidebarNewBoard" href="My Board 3.html">
+							<b>+</b> &nbsp;New board
+						</a>
+					</li>
+
+					<br>
+					<hr class="sidebarLine">
+					<li class="sidebarTitle">
+						<br>
+						<p style="margin-top: -10px; margin-bottom: 15px;">Shared boards</p>
+					</li>
+
+					<ul class="shared-boards-list">
+						<li>
+							<a class="sidebarButton shared-board-button" data-board-id="6" href="Group Project.html">
+								Group project
+							</a>
+
+							<span class="sidebarBoardOptions shared" onclick="OpenBoardOptions(this, 6, `Group project`, `Tasks for our group project`)"><b>&nbsp;⋮&nbsp;&nbsp;</b></span>
+							<div class="sidebarUpDownDiv">
+								<span class="sidebarUp" onclick="MoveBoard(6, &#39;up&#39;)">⏶</span>
+								<span class="sidebarDown" onclick="MoveBoard(6, &#39;down&#39;)">⏷</span>
+							</div>
+						</li>
+					</ul>
+					<li>
+						<span class="sidebarNewBoard" onclick="JoinSharedBoard(this)">
+							<b>➥</b> &nbsp;Join board
+						</span>
+					</li>
+					<li>
+						<a class="sidebarNewBoard" href="Shared Board 2.html">
+							<b>+</b> &nbsp;New board
+						</a>
+					</li>
+
+				</div>
+			</div>
+		</nav>
+
+	</header>
+
+	<div class="main">
+		<main role="main">
+
+			<div class="lists-row" id="lists-view" data-board-id="6">
+
+				<div class="list-column" style="background-color: #a1620b;" data-colour-hex="#a1620b" data-colour-text="Orange">
+
+					<span class="list-name" id="40" onclick="EditList(this)">Planning</span>
+
+					<div class="list-options-icons" id="40">
+
+						<span class="move-list-left" title="Move left" onclick="MoveList(this, &#39;left&#39;)" id="40">⏴</span>
+
+						<div class="list-transfer-container" id="6">
+							<div class="click-off-menu" onclick="CloseTransferMenu(this)"></div>
+							<span class="transfer-list" title="Move to another board" onclick="MoveListToBoard(this)" id="40"><b>⇆</b></span>
+							<div class="transfer-menu" style="display: none;"></div>
+						</div>
+
+						<span class="colour-list" title="Change colour" onclick="EditListColour(this)" id="40">
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="stroke: currentColor; stroke-width: 0.8px; stroke-linejoin: round;">
+								<path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"></path>
+								<path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"></path>
+							</svg>
+						</span>
+
+						<span class="delete-list" title="Delete" onclick="DeleteListConfirmation(this)" id="40"><b>✕</b></span>
+
+						<span class="move-list-right" title="Move right" onclick="MoveList(this, &#39;right&#39;)" id="40">⏵</span>
+
+					</div>
+
+
+					<ul id="40" class="task-ul">
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="101">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="101">⏶</span>
+
+							<label class="container completed-task" id="label_101" data-task-pos="1">
+								ER diagram
+								<input type="checkbox" data-task-id="101" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="101">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="101" data-task-pos="1">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="102">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="102">⏶</span>
+
+							<label class="container completed-task" id="label_102" data-task-pos="2">
+								user stories
+								<input type="checkbox" data-task-id="102" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="102">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="102" data-task-pos="2">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="103">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="103">⏶</span>
+
+							<label class="container completed-task" id="label_103" data-task-pos="3">
+								wireframe visualisation
+								<input type="checkbox" data-task-id="103" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="103">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="103" data-task-pos="3">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="104">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="104">⏶</span>
+
+							<label class="container task" id="label_104" data-task-pos="4">
+								think a lot
+								<input type="checkbox" data-task-id="104" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="104">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="104" data-task-pos="4">✕</span>
+							</div>
+						</li>
+
+						<li style="list-style: none">
+							<label class="container"></label>
+							<button class="newTask" title="New task" onclick="NewTask(this)">+</button>
+
+						</li>
+					</ul>
+				</div>
+				<div class="list-column" style="background-color: #0d365c;" data-colour-hex="#0d365c" data-colour-text="Blue">
+
+					<span class="list-name" id="39" onclick="EditList(this)">Back end</span>
+
+					<div class="list-options-icons" id="39">
+
+						<span class="move-list-left" title="Move left" onclick="MoveList(this, &#39;left&#39;)" id="39">⏴</span>
+
+						<div class="list-transfer-container" id="6">
+							<div class="click-off-menu" onclick="CloseTransferMenu(this)"></div>
+							<span class="transfer-list" title="Move to another board" onclick="MoveListToBoard(this)" id="39"><b>⇆</b></span>
+							<div class="transfer-menu" style="display: none;"></div>
+						</div>
+
+						<span class="colour-list" title="Change colour" onclick="EditListColour(this)" id="39">
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="stroke: currentColor; stroke-width: 0.8px; stroke-linejoin: round;">
+								<path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"></path>
+								<path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"></path>
+							</svg>
+						</span>
+
+						<span class="delete-list" title="Delete" onclick="DeleteListConfirmation(this)" id="39"><b>✕</b></span>
+
+						<span class="move-list-right" title="Move right" onclick="MoveList(this, &#39;right&#39;)" id="39">⏵</span>
+
+					</div>
+
+
+					<ul id="39" class="task-ul">
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="105">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="105">⏶</span>
+
+							<label class="container completed-task" id="label_105" data-task-pos="1">
+								create database tables
+								<input type="checkbox" data-task-id="105" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="105">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="105" data-task-pos="1">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="106">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="106">⏶</span>
+
+							<label class="container completed-task" id="label_106" data-task-pos="2">
+								populate the tables with dummy data
+								<input type="checkbox" data-task-id="106" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="106">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="106" data-task-pos="2">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="109">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="109">⏶</span>
+
+							<label class="container completed-task" id="label_109" data-task-pos="3">
+								create GitHub repo
+								<input type="checkbox" data-task-id="109" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="109">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="109" data-task-pos="3">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="110">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="110">⏶</span>
+
+							<label class="container task" id="label_110" data-task-pos="4">
+								implement database connection
+								<input type="checkbox" data-task-id="110" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="110">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="110" data-task-pos="4">✕</span>
+							</div>
+						</li>
+
+						<li style="list-style: none">
+							<label class="container"></label>
+							<button class="newTask" title="New task" onclick="NewTask(this)">+</button>
+
+						</li>
+					</ul>
+				</div>
+				<div class="list-column" style="background-color: #451b12;" data-colour-hex="#451b12" data-colour-text="Red">
+
+					<span class="list-name" id="38" onclick="EditList(this)">Front end</span>
+
+					<div class="list-options-icons" id="38">
+
+						<span class="move-list-left" title="Move left" onclick="MoveList(this, &#39;left&#39;)" id="38">⏴</span>
+
+						<div class="list-transfer-container" id="6">
+							<div class="click-off-menu" onclick="CloseTransferMenu(this)"></div>
+							<span class="transfer-list" title="Move to another board" onclick="MoveListToBoard(this)" id="38"><b>⇆</b></span>
+							<div class="transfer-menu" style="display: none;"></div>
+						</div>
+
+						<span class="colour-list" title="Change colour" onclick="EditListColour(this)" id="38">
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="stroke: currentColor; stroke-width: 0.8px; stroke-linejoin: round;">
+								<path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"></path>
+								<path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"></path>
+							</svg>
+						</span>
+
+						<span class="delete-list" title="Delete" onclick="DeleteListConfirmation(this)" id="38"><b>✕</b></span>
+
+						<span class="move-list-right" title="Move right" onclick="MoveList(this, &#39;right&#39;)" id="38">⏵</span>
+
+					</div>
+
+
+					<ul id="38" class="task-ul">
+						<li style="list-style: none; position: relative;" id="38" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="107">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="107">⏶</span>
+
+							<label class="container task" id="label_107" data-task-pos="1">
+								find a cool font
+								<input type="checkbox" data-task-id="107" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="107">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="107" data-task-pos="1">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="38" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="108">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="108">⏶</span>
+
+							<label class="container task" id="label_108" data-task-pos="2">
+								implement house style
+								<input type="checkbox" data-task-id="108" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="108">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="108" data-task-pos="2">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="38" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="111">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="111">⏶</span>
+
+							<label class="container task" id="label_111" data-task-pos="3">
+								make the website look awesome
+								<input type="checkbox" data-task-id="111" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="111">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="111" data-task-pos="3">✕</span>
+							</div>
+						</li>
+
+						<li style="list-style: none">
+							<label class="container"></label>
+							<button class="newTask" title="New task" onclick="NewTask(this)">+</button>
+
+						</li>
+					</ul>
+				</div>
+				<div class="list-column" style="background-color: #4d2d47;" data-colour-hex="#4d2d47" data-colour-text="Purple">
+
+					<span class="list-name" id="41" onclick="EditList(this)">Testing</span>
+
+					<div class="list-options-icons" id="41">
+
+						<span class="move-list-left" title="Move left" onclick="MoveList(this, &#39;left&#39;)" id="41">⏴</span>
+
+						<div class="list-transfer-container" id="6">
+							<div class="click-off-menu" onclick="CloseTransferMenu(this)"></div>
+							<span class="transfer-list" title="Move to another board" onclick="MoveListToBoard(this)" id="41"><b>⇆</b></span>
+							<div class="transfer-menu" style="display: none;"></div>
+						</div>
+
+						<span class="colour-list" title="Change colour" onclick="EditListColour(this)" id="41">
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="stroke: currentColor; stroke-width: 0.8px; stroke-linejoin: round;">
+								<path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"></path>
+								<path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"></path>
+							</svg>
+						</span>
+
+						<span class="delete-list" title="Delete" onclick="DeleteListConfirmation(this)" id="41"><b>✕</b></span>
+
+						<span class="move-list-right" title="Move right" onclick="MoveList(this, &#39;right&#39;)" id="41">⏵</span>
+
+					</div>
+
+
+					<ul id="41" class="task-ul">
+						<li style="list-style: none; position: relative;" id="41" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="112">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="112">⏶</span>
+
+							<label class="container task" id="label_112" data-task-pos="1">
+								test
+								<input type="checkbox" data-task-id="112" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="112">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="112" data-task-pos="1">✕</span>
+							</div>
+						</li>
+
+						<li style="list-style: none">
+							<label class="container"></label>
+							<button class="newTask" title="New task" onclick="NewTask(this)">+</button>
+
+						</li>
+					</ul>
+				</div>
+
+				<span class="new-list" title="New list" onclick="NewList(this)" data-board-id="6."><b>+</b></span>
+
+			</div>
+			<div class="page-column view-hidden" id="page-view" data-board-id="6">
+				<div class="list-page" data-colour-hex="#a1620b" data-colour-text="Orange">
+
+					<span class="list-name-pg" id="40">Planning</span>
+
+					<ul id="40" class="task-ul">
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="101">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="101">⏶</span>
+
+							<label class="container completed-task" id="label_101" data-task-pos="1">
+								ER diagram
+								<input type="checkbox" data-task-id="101" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="101">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="101" data-task-pos="1">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="102">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="102">⏶</span>
+
+							<label class="container completed-task" id="label_102" data-task-pos="2">
+								user stories
+								<input type="checkbox" data-task-id="102" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="102">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="102" data-task-pos="2">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="103">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="103">⏶</span>
+
+							<label class="container completed-task" id="label_103" data-task-pos="3">
+								wireframe visualisation
+								<input type="checkbox" data-task-id="103" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="103">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="103" data-task-pos="3">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="40" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="104">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="104">⏶</span>
+
+							<label class="container task" id="label_104" data-task-pos="4">
+								think a lot
+								<input type="checkbox" data-task-id="104" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="104">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="104" data-task-pos="4">✕</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="list-page" data-colour-hex="#0d365c" data-colour-text="Blue">
+
+					<span class="list-name-pg" id="39">Back end</span>
+
+					<ul id="39" class="task-ul">
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="105">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="105">⏶</span>
+
+							<label class="container completed-task" id="label_105" data-task-pos="1">
+								create database tables
+								<input type="checkbox" data-task-id="105" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="105">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="105" data-task-pos="1">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="106">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="106">⏶</span>
+
+							<label class="container completed-task" id="label_106" data-task-pos="2">
+								populate the tables with dummy data
+								<input type="checkbox" data-task-id="106" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="106">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="106" data-task-pos="2">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="109">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="109">⏶</span>
+
+							<label class="container completed-task" id="label_109" data-task-pos="3">
+								create GitHub repo
+								<input type="checkbox" data-task-id="109" onchange="toggleCheckbox(this)" class="task-checkbox" checked="">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="109">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="109" data-task-pos="3">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="39" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="110">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="110">⏶</span>
+
+							<label class="container task" id="label_110" data-task-pos="4">
+								implement database connection
+								<input type="checkbox" data-task-id="110" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="110">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="110" data-task-pos="4">✕</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="list-page" data-colour-hex="#451b12" data-colour-text="Red">
+
+					<span class="list-name-pg" id="38">Front end</span>
+
+					<ul id="38" class="task-ul">
+						<li style="list-style: none; position: relative;" id="38" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="107">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="107">⏶</span>
+
+							<label class="container task" id="label_107" data-task-pos="1">
+								find a cool font
+								<input type="checkbox" data-task-id="107" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="107">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="107" data-task-pos="1">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="38" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="108">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="108">⏶</span>
+
+							<label class="container task" id="label_108" data-task-pos="2">
+								implement house style
+								<input type="checkbox" data-task-id="108" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="108">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="108" data-task-pos="2">✕</span>
+							</div>
+						</li>
+						<li style="list-style: none; position: relative;" id="38" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="111">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="111">⏶</span>
+
+							<label class="container task" id="label_111" data-task-pos="3">
+								make the website look awesome
+								<input type="checkbox" data-task-id="111" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="111">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="111" data-task-pos="3">✕</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="list-page" data-colour-hex="#4d2d47" data-colour-text="Purple">
+
+					<span class="list-name-pg" id="41">Testing</span>
+
+					<ul id="41" class="task-ul">
+						<li style="list-style: none; position: relative;" id="41" class="task-li">
+
+							<span class="down" onclick="MoveTask(this, &#39;down&#39;)" id="112">⏷</span>
+							<span class="up" onclick="MoveTask(this, &#39;up&#39;)" id="112">⏶</span>
+
+							<label class="container task" id="label_112" data-task-pos="1">
+								test
+								<input type="checkbox" data-task-id="112" onchange="toggleCheckbox(this)" class="task-checkbox">
+								<span class="checkmark"></span>
+							</label>
+
+							<div class="edit-delete-span">
+								<span class="edit" title="Edit" onclick="EditTask(this)" id="112">✎</span>
+								<span class="delete" title="Delete" onclick="DeleteTask(this)" id="112" data-task-pos="1">✕</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</main>
+	</div>
+
+</body>
+</html>
