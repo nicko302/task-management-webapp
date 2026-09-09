@@ -1,11 +1,18 @@
-# Task Management System Project
-## Overview
-_To-do list/task management proof of concept web app._
+# Task Management System Project - Live demo
+## Features
+- **Responsive, personalisable layout** to give users complete control of their workflow
+	- Task, list and board reordering to match hierarchy or personal preference
+	- List recolouring for colour co-ordination and to better suit the user's taste
+	- Switch the board display to "list view" to arrange all tasks into one coherent checklist
+- **Shared boards** to share a workspace with other users for seamless co-operation
+	- Join codes for the board can be re-generated if the first has been lost
+	- Members can be forcefully removed from a board by the board's admin
+- **Lightweight!**
+	- No unnecessary bells and whistles - only what is needed for a smooth experience
 
-This full-stack web app allows users to manage their workflow within a central application. Users can organise their tasks into Boards, which act as individual workspaces where multiple task lists can be managed. This allows many projects to be tracked at once by breaking them down into manageable and organised lists. Users can even share entire boards with other users to optimise their collaboration.
+----
 
-## Project information
-This project was built using **ASP.NET Core MVC Framework**, utilising **C#** and **Entity Framework Core** alongside **MySQL** for the backend. The frontend is powered by **JavaScript** and **CSS**.
+_View the `main` branch for further information._
 
 ----
 
