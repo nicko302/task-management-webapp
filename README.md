@@ -11,7 +11,7 @@ Includes various personalisation/accessibility features to give the user control
 This project was built using **ASP.NET Core MVC Framework**, utilising **C#** and **Entity Framework Core** alongside **MySQL** for the backend. The frontend is powered by **JavaScript** and **CSS**.
 
 ## Showcase:
-<img width="460" height="300" alt="tweenframe-com__slideshow" src="https://github.com/user-attachments/assets/cbb8e3b7-7d3b-404e-9a26-60a62a31c1f2" />
+<img width="600" height="400" alt="tweenframe-com__slideshow" src="https://github.com/user-attachments/assets/cbb8e3b7-7d3b-404e-9a26-60a62a31c1f2" />
 
 ----
 
